@@ -1,9 +1,11 @@
 package org.sp.physics;
 
+import org.sp.ConfigReader;
+
 /**
  * A utility class for storing position information
  */
-public class Vector2D {
+public class Vector2D implements ConfigReader {
 
 	private double x;
 	private double y;

@@ -1,5 +1,7 @@
 package org.sp.entities;
 
+import org.json.simple.JSONObject;
+import org.sp.ConfigReader;
 import org.sp.logic.Damagable;
 import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
@@ -9,21 +11,34 @@ import org.sp.rendering.Renderable;
 import javafx.scene.image.Image;
 
 import java.io.File;
+import java.util.HashMap;
 
-public class Player implements Moveable, Damagable, Renderable {
+public class Player implements Moveable, Damagable, Renderable, ConfigReader {
 
-    private final Vector2D position;
+    private  Vector2D position = new Vector2D(0,0);
     private final Animator anim = null;
     private double health = 100;
-
     private final double width = 25;
     private final double height = 30;
     private final Image image;
+    private int lives = 0;
+    private String color;
 
-    public Player(Vector2D position){
+
+    public Player(){
         this.image = new Image(new File("src/main/resources/player.png").toURI().toString(), width, height, true, true);
-        this.position = position;
+        setPlayerData();
+
     }
+    public void setPlayerData(){
+        HashMap<String, Object> playerData;
+        playerData = ConfigReader.readPlayerData();
+        this.position.setX(((Number)playerData.get("x")).doubleValue());
+        this.position.setY(((Number) playerData.get("y")).doubleValue());
+        this.lives = ((Number)playerData.get("lives")).intValue();
+        this.color = (String) playerData.get("color");
+    }
+
 
     @Override
     public void takeDamage(double amount) {

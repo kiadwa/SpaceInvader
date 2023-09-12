@@ -3,11 +3,16 @@ package org.sp;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 public interface ConfigReader {
+    static final String path = "src/main/resources/config.json";
     /**
      * You will probably not want to use a static method/class for this.
      *
@@ -54,6 +59,59 @@ public interface ConfigReader {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+    public static List<Integer> readGameWindowSize(){
+        List<Integer> result = new ArrayList<>();
+        JSONParser jsonparser = new JSONParser();
+        try{
+            Object object = jsonparser.parse(new FileReader(path));
+            JSONObject jsonObject = (JSONObject) object;
+            JSONObject jsonGame = (JSONObject) jsonObject.get("Game");
+
+            Integer gameX = ((Number) ((JSONObject) jsonGame.get("size")).get("x")).intValue();
+            Integer gameY = ((Number) ((JSONObject) jsonGame.get("size")).get("y")).intValue();
+            result.add(gameX);
+            result.add(gameY);
+
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return result;
+
+    }
+    public static  HashMap<String, Object> readPlayerData(){
+        HashMap<String, Object> result = new HashMap<>();
+        JSONParser jsonparser = new JSONParser();
+        try{
+            Object object = jsonparser.parse(new FileReader(path));
+            JSONObject jsonObject = (JSONObject) object;
+            JSONObject jsonPlayer= (JSONObject) jsonObject.get("Player");
+
+            Object playerX = ((JSONObject)(jsonPlayer.get("position"))).get("x");
+            Object playerY = ((JSONObject)(jsonPlayer.get("position"))).get("y");
+            Object speed = jsonPlayer.get("speed");
+            Object lives = jsonPlayer.get("lives");
+
+
+            result.put("x",  playerX);
+            result.put("y", playerY);
+            result.put("speed", speed);
+            result.put("lives", lives);
+
+
+
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }

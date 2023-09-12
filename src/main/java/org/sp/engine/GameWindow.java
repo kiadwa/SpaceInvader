@@ -3,6 +3,7 @@ package org.sp.engine;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.sp.ConfigReader;
 import org.sp.entities.EntityViewImpl;
 import org.sp.entities.SpaceBackground;
 import javafx.util.Duration;
@@ -14,7 +15,7 @@ import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
-public class GameWindow {
+public class GameWindow implements ConfigReader {
 	private final int width;
     private final int height;
 	private Scene scene;
@@ -27,9 +28,10 @@ public class GameWindow {
     private double yViewportOffset = 0.0;
     private static final double VIEWPORT_MARGIN = 280.0;
 
-	public GameWindow(GameEngine model, int width, int height){
-		this.width = width;
-        this.height = height;
+	public GameWindow(GameEngine model){
+		List<Integer> windowSize = ConfigReader.readGameWindowSize();
+        this.width = windowSize.get(0);
+        this.height = windowSize.get(1);
         this.model = model;
         pane = new Pane();
         scene = new Scene(pane, width, height);
@@ -41,6 +43,7 @@ public class GameWindow {
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
 
         entityViews = new ArrayList<EntityView>();
+
 
     }
 

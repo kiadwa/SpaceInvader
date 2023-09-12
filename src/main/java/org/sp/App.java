@@ -18,13 +18,12 @@ public class App extends Application {
         Map<String, String> params = getParameters().getNamed();
 
         GameEngine model = new GameEngine("/resources/config.json");
-        GameWindow window = new GameWindow(model, 640, 400);
+        GameWindow window = new GameWindow(model);
         window.run();
 
         primaryStage.setTitle("Space Invaders");
         primaryStage.setScene(window.getScene());
         primaryStage.show();
-
         window.run();
     }
 }

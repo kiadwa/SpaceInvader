@@ -21,16 +21,16 @@ public class GameEngine implements ConfigReader {
 
 	private boolean left;
 	private boolean right;
-	private String configFilePath;
+
 
 	public GameEngine(String config){
 		// read the config here
 		gameobjects = new ArrayList<GameObject>();
 		renderables = new ArrayList<Renderable>();
 
-		player = new Player(new Vector2D(200, 380));
+		player = new Player();
 		renderables.add(player);
-		configFilePath = config;
+
 	}
 
 	/**

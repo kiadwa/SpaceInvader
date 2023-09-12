@@ -23,7 +23,7 @@ class KeyboardInputHandler {
         this.model = model;
 
         // TODO (longGoneUser): Is there a better place for this code?
-        URL mediaUrl = getClass().getResource("/shoot.wav");
+        URL mediaUrl = getClass().getResource("/shoot2.wav");
         String jumpURL = mediaUrl.toExternalForm();
 
         Media sound = new Media(jumpURL);
