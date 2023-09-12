@@ -3,6 +3,7 @@ package org.sp.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sp.ConfigReader;
 import org.sp.GameObject;
 import org.sp.entities.Player;
 import org.sp.physics.Moveable;
@@ -12,7 +13,7 @@ import org.sp.rendering.Renderable;
 /**
  * This class manages the main loop and logic of the game
  */
-public class GameEngine {
+public class GameEngine implements ConfigReader {
 
 	private List<GameObject> gameobjects;
 	private List<Renderable> renderables;
@@ -20,6 +21,7 @@ public class GameEngine {
 
 	private boolean left;
 	private boolean right;
+	private String configFilePath;
 
 	public GameEngine(String config){
 		// read the config here
@@ -28,6 +30,7 @@ public class GameEngine {
 
 		player = new Player(new Vector2D(200, 380));
 		renderables.add(player);
+		configFilePath = config;
 	}
 
 	/**

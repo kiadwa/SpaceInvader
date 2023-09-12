@@ -7,7 +7,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-public class ConfigReader {
+public interface ConfigReader {
     /**
      * You will probably not want to use a static method/class for this.
      *
@@ -29,7 +29,7 @@ public class ConfigReader {
             Long gameX = (Long) ((JSONObject) jsonGame.get("size")).get("x");
             Long gameY = (Long) ((JSONObject) jsonGame.get("size")).get("y");
 // TODO: delete me, this is just a demonstration:
-            System.out.println("Game details: x: " + gameX);
+            System.out.println("Game details: x: " + gameX + " Game details: y: " + gameY);
 // reading the "Enemies" array:
             JSONArray jsonEnemies = (JSONArray) jsonObject.get("Enemies");
 // reading from the array:
@@ -37,14 +37,13 @@ public class ConfigReader {
                 JSONObject jsonEnemy = (JSONObject) obj;
 // the enemy position is a double
                 Double positionX;
-                positionX = (Double) ((JSONObject)
-                        jsonEnemy.get("position")).get("x");
-                Double positionY = (Double) ((JSONObject)
-                        jsonEnemy.get("position")).get("y");
+                Double positionY;
+                positionX = ((Number) ((JSONObject) jsonEnemy.get("position")).get("x")).doubleValue();
+                positionY = ((Number) ((JSONObject) jsonEnemy.get("position")).get("y")).doubleValue();
     String projectileStrategy = (String) jsonEnemy.get("projectile");
 // TODO: delete me, this is just a demonstration:
-                System.out.println("Enemey x: " +
-                        positionX +
+                System.out.println("Enemy x: " +
+                        positionX + " Enemy y: " + positionY +
                         ", projectile: " +
                         projectileStrategy);
             }
@@ -56,23 +55,5 @@ public class ConfigReader {
             e.printStackTrace();
         }
     }
-    /**
-     * Your main method will probably be in another file!
-     *
-     * @param args First argument is the path to the config file
-     */
-    public static void main(String[] args) {
-// if a command line argument is provided, that should be used as the
 
-// if not, you can hard-code a default. e.g."src/main/resources/config.json"
-// this makes it easier to test your program with different config files
-        String configPath;
-        if (args.length > 0) {
-            configPath = args[0];
-        } else {
-            configPath = "src/main/resources/config.json";
-        }
-// parse the file:
-        ConfigReader.parse(configPath);
-    }
 }
