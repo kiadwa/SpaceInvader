@@ -60,7 +60,7 @@ public interface ConfigReader {
             e.printStackTrace();
         }
     }
-    public static List<Integer> readGameWindowSize(){
+    static List<Integer> readGameWindowSize(){
         List<Integer> result = new ArrayList<>();
         JSONParser jsonparser = new JSONParser();
         try{
@@ -83,7 +83,7 @@ public interface ConfigReader {
         return result;
 
     }
-    public static  HashMap<String, Object> readPlayerData(){
+    static  HashMap<String, Object> readPlayerData(){
         HashMap<String, Object> result = new HashMap<>();
         JSONParser jsonparser = new JSONParser();
         try{
@@ -101,9 +101,6 @@ public interface ConfigReader {
             result.put("y", playerY);
             result.put("speed", speed);
             result.put("lives", lives);
-
-
-
         }catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

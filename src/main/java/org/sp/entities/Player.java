@@ -1,7 +1,8 @@
 package org.sp.entities;
 
-import org.json.simple.JSONObject;
 import org.sp.ConfigReader;
+import org.sp.factory.Projectile;
+import org.sp.factory.ProjectileFactory;
 import org.sp.logic.Damagable;
 import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
@@ -13,7 +14,7 @@ import javafx.scene.image.Image;
 import java.io.File;
 import java.util.HashMap;
 
-public class Player implements Moveable, Damagable, Renderable, ConfigReader {
+public class Player extends ProjectileFactory implements Moveable, Damagable, Renderable, ConfigReader {
 
     private  Vector2D position = new Vector2D(0,0);
     private final Animator anim = null;
@@ -37,6 +38,8 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader {
         this.position.setY(((Number) playerData.get("y")).doubleValue());
         this.lives = ((Number)playerData.get("lives")).intValue();
         this.color = (String) playerData.get("color");
+        System.out.println(this.getPosition().getX());
+        System.out.println(this.getPosition().getY());
     }
 
 
@@ -77,6 +80,7 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader {
 
     public void shoot(){
         // todo
+        createProjectile();
     }
 
     @Override
@@ -103,5 +107,9 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader {
     public Layer getLayer() {
         return Layer.FOREGROUND;
     }
-
+    @Override
+    public Projectile createProjectile() {
+        Projectile projectile = new PlayerProjectile(new Vector2D(this.getPosition().getX(), this.getPosition().getY() + 2), image);
+        return projectile;
+   }
 }
