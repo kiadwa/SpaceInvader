@@ -2,16 +2,20 @@ package org.sp.entities;
 
 import javafx.scene.image.Image;
 import org.sp.factory.Projectile;
+import org.sp.physics.Collider;
 import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Renderable;
 
-public class EnemyProjectile implements Projectile, Moveable, Renderable {
+public class EnemyProjectile implements Projectile, Moveable, Renderable, Collider {
     private Vector2D position = new Vector2D(0,0);
     private final double width = 5;
     private final double height = 10;
     private final Image image = null;
 
+    public EnemyProjectile(Vector2D position){
+        this.position = position;
+    }
     @Override
     public void tick() {
 
@@ -28,13 +32,18 @@ public class EnemyProjectile implements Projectile, Moveable, Renderable {
     }
 
     @Override
+    public void setImage(Image image) {
+
+    }
+
+    @Override
     public void up() {
 
     }
 
     @Override
     public void down() {
-
+        this.position.setY(this.position.getY() - 1);
     }
 
     @Override
@@ -49,26 +58,26 @@ public class EnemyProjectile implements Projectile, Moveable, Renderable {
 
     @Override
     public Image getImage() {
-        return null;
+        return image;
     }
 
     @Override
     public double getWidth() {
-        return 0;
+        return width;
     }
 
     @Override
     public double getHeight() {
-        return 0;
+        return height;
     }
 
     @Override
     public Vector2D getPosition() {
-        return null;
+        return position;
     }
 
     @Override
     public Layer getLayer() {
-        return null;
+        return Layer.FOREGROUND;
     }
 }

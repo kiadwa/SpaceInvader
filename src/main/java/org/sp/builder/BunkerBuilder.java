@@ -20,15 +20,7 @@ public class BunkerBuilder implements ObjectBuilder{
 
     }
 
-    @Override
-    public void setWidth(double width) {
 
-    }
-
-    @Override
-    public void setHeight(double height) {
-
-    }
 
     @Override
     public void setAnimator(Animator animator) {

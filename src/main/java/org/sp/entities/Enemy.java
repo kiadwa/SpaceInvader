@@ -2,7 +2,11 @@ package org.sp.entities;
 
 import javafx.scene.image.Image;
 import org.sp.ConfigReader;
+import org.sp.GameObject;
+import org.sp.factory.Projectile;
+import org.sp.factory.ProjectileFactory;
 import org.sp.logic.Damagable;
+import org.sp.physics.Collider;
 import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
@@ -10,16 +14,24 @@ import org.sp.rendering.Renderable;
 
 import java.io.File;
 
-public class Enemy implements Renderable, Damagable, Moveable, ConfigReader {
+public class Enemy extends
+        ProjectileFactory
+        implements
+        Renderable,
+        Damagable,
+        Moveable,
+        Collider,
+        ConfigReader,
+        GameObject {
     private Vector2D position = new Vector2D(0,0);
     private final Animator anim = null;
     private double health = 100;
     private final double width = 25;
     private final double height = 30;
-    private final Image image;
+    private Image image;
+    private boolean Fastprojectile = false;
 
     public Enemy() {
-        this.image = new Image(new File("src/main/resources/enemy.png").toURI().toString(), width, height, true, true);
     }
 
     @Override
@@ -27,6 +39,7 @@ public class Enemy implements Renderable, Damagable, Moveable, ConfigReader {
         this.health -= amount;
     }
 
+    public void setFastprojectile(boolean bool){this.Fastprojectile = bool;}
     @Override
     public double getHealth() {
         return this.health;
@@ -56,7 +69,7 @@ public class Enemy implements Renderable, Damagable, Moveable, ConfigReader {
     public void right() {
         this.position.setX(this.position.getY() + 1);
     }
-
+    public void setImage(Image image){this.image = image;}
     @Override
     public Image getImage() {
         return this.image;
@@ -69,6 +82,7 @@ public class Enemy implements Renderable, Damagable, Moveable, ConfigReader {
 
     @Override
     public double getHeight() {return height;}
+    public void setPosition(Vector2D vector2D){this.position = vector2D;}
 
     @Override
     public Vector2D getPosition() {
@@ -78,5 +92,24 @@ public class Enemy implements Renderable, Damagable, Moveable, ConfigReader {
     @Override
     public Layer getLayer() {
         return Layer.FOREGROUND;
+    }
+
+    @Override
+    protected Projectile createProjectile() {
+        Projectile projectile = new EnemyProjectile(new Vector2D(this.getPosition().getX(), this.getPosition().getY() + 2));
+        return projectile;    }
+
+    public void setHealth(double health) {
+        this.health = health;
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void update() {
+
     }
 }

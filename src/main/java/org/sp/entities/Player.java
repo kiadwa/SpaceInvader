@@ -50,12 +50,14 @@ public class Player extends ProjectileFactory implements Moveable, Damagable, Re
 
     @Override
     public double getHealth() {
-        return this.health;
+        if(lives > 0 && health == 0)
+            return 100;
+        return health;
     }
 
     @Override
     public boolean isAlive() {
-        return this.health > 0;
+        return this.health > 0 || this.lives > 0;
     }
 
     @Override
@@ -109,7 +111,7 @@ public class Player extends ProjectileFactory implements Moveable, Damagable, Re
     }
     @Override
     public Projectile createProjectile() {
-        Projectile projectile = new PlayerProjectile(new Vector2D(this.getPosition().getX(), this.getPosition().getY() + 2), image);
+        Projectile projectile = new PlayerProjectile(new Vector2D(this.getPosition().getX(), this.getPosition().getY() + 2));
         return projectile;
    }
 }

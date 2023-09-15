@@ -60,6 +60,67 @@ public interface ConfigReader {
             e.printStackTrace();
         }
     }
+    static List<List<Object>> readEnemiesData(){
+        List<List<Object>> result = new ArrayList<>();
+        JSONParser jsonParser = new JSONParser();
+        try{
+            Object object = jsonParser.parse(new FileReader(path));
+            JSONObject jsonObject = (JSONObject) object;
+            JSONArray jsonEnemies = (JSONArray) jsonObject.get("Enemies");
+            for(Object obj: jsonEnemies){
+                JSONObject jsonEnemy = (JSONObject) obj;
+                List<Object> temp = new ArrayList<>();
+                temp.add((Object) ((JSONObject)jsonEnemy.get("position")).get("x"));
+                temp.add((Object) ((JSONObject)jsonEnemy.get("position")).get("y"));
+                temp.add((Object) (jsonEnemy.get("projectile")));
+                result.add(temp);
+            }
+
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    static List<HashMap<String, Double[]>> readBunkersData(){
+        List<HashMap<String, Double[]>> result = new ArrayList<>();
+        JSONParser jsonParser = new JSONParser();
+        try{
+            Object object = jsonParser.parse(new FileReader(path));
+            JSONObject jsonObject = (JSONObject) object;
+            JSONArray jsonBunkers = (JSONArray) jsonObject.get("Bunkers");
+            for(Object obj: jsonBunkers){
+                JSONObject jsonBunker = (JSONObject) obj;
+                HashMap<String, Double[]> temp = new HashMap<>();
+                Double positionX;
+                Double positionY;
+                positionX = ((Number) ((JSONObject) jsonBunker.get("position")).get("x")).doubleValue();
+                positionY = ((Number) ((JSONObject) jsonBunker.get("position")).get("y")).doubleValue();
+                Double sizeX;
+                Double sizeY;
+                sizeX = ((Number) ((JSONObject) jsonBunker.get("size")).get("x")).doubleValue();
+                sizeY = ((Number) ((JSONObject) jsonBunker.get("size")).get("y")).doubleValue();
+
+                temp.put("position", new Double[]{positionX,positionY});
+                temp.put("size", new Double[]{sizeX,sizeY});
+
+                result.add(temp);
+            }
+
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+    }
+        return result;
+    }
     static List<Integer> readGameWindowSize(){
         List<Integer> result = new ArrayList<>();
         JSONParser jsonparser = new JSONParser();
