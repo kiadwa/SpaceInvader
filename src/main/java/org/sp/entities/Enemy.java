@@ -26,8 +26,8 @@ public class Enemy extends
     private Vector2D position = new Vector2D(0,0);
     private final Animator anim = null;
     private double health = 100;
-    private final double width = 25;
-    private final double height = 30;
+    private double width = 25;
+    private double height = 30;
     private Image image;
     private boolean Fastprojectile = false;
 
@@ -74,12 +74,12 @@ public class Enemy extends
     public Image getImage() {
         return this.image;
     }
-
+    public void setWidth(double width){this.width = width;}
     @Override
     public double getWidth() {
         return width;
     }
-
+    public void setHeight(double height){this.height = height;}
     @Override
     public double getHeight() {return height;}
     public void setPosition(Vector2D vector2D){this.position = vector2D;}

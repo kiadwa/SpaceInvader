@@ -13,15 +13,15 @@ public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, 
     private Vector2D position = new Vector2D(0,0);
     private final Animator anim = null;
     private double health = 300;
-    private final double width = 25;
-    private final double height = 30;
+    private double width = 25;
+    private double height = 30;
     private  Image image = null;
 
     @Override
     public void takeDamage(double amount) {
         this.health -= amount;
     }
-
+    public void setHealth(double health) {this.health = health;}
     @Override
     public double getHealth() {
         return this.health;
@@ -37,17 +37,18 @@ public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, 
     public Image getImage() {
         return image;
     }
-
+    public void setWidth(double width){this.width = width;}
     @Override
     public double getWidth() {
         return width;
     }
+    public void setHeight(double height){this.height= height;}
 
     @Override
     public double getHeight() {
         return height;
     }
-
+    public void setPosition(Vector2D vector2D) {this.position = vector2D;}
     @Override
     public Vector2D getPosition() {
         return position;

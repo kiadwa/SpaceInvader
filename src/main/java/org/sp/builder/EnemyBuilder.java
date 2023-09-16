@@ -28,8 +28,23 @@ public class EnemyBuilder implements ObjectBuilder, ConfigReader {
     }
 
     @Override
+    public void setWidth(double width) {
+        this.product.setWidth(width);
+    }
+
+    @Override
+    public void setHeight(double height) {
+        this.product.setHeight(height);
+    }
+
+    @Override
     public void setAnimator(Animator animator) {
 
+    }
+
+    @Override
+    public void setProjectileType(boolean bool) {
+        this.product.setFastprojectile(bool);
     }
 
 }
