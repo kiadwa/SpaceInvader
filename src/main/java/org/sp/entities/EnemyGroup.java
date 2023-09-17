@@ -36,6 +36,5 @@ public class EnemyGroup {
                 enemy.down();
             }
         }
-
     }
 }
