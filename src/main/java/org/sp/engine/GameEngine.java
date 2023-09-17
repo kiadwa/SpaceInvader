@@ -88,10 +88,13 @@ public class GameEngine implements ConfigReader {
 	public void update(){
 		movePlayer();
 		for(GameObject go: gameobjects){
+			if(go instanceof Projectile) System.out.println(((Projectile) go).getPosition().getY());
 			go.update();
 		}
+		//movev enemy in group
 		enemyGroup.moveEnemy();
 		enemyGroup.updateMoveScheme();
+		// remove projectile if reach end of screen. (1.0 is out of screen)
 
 		// ensure that renderable foreground objects don't go off-screen
 		for(Renderable ro: renderables){
