@@ -3,6 +3,7 @@ package org.sp.entities;
 import javafx.scene.image.Image;
 import org.sp.ConfigReader;
 import org.sp.GameObject;
+import org.sp.factory.EnemyProjectile;
 import org.sp.factory.Projectile;
 import org.sp.factory.ProjectileFactory;
 import org.sp.logic.Damagable;
@@ -12,10 +13,7 @@ import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
 import org.sp.rendering.Renderable;
 
-import java.io.File;
-
-public class Enemy extends
-        ProjectileFactory
+public class Enemy
         implements
         Renderable,
         Damagable,
@@ -30,6 +28,7 @@ public class Enemy extends
     private double height = 30;
     private Image image;
     private boolean Fastprojectile = false;
+    private double movementSPD = 0.5;
 
     public Enemy() {
     }
@@ -52,22 +51,22 @@ public class Enemy extends
 
     @Override
     public void up() {
-        this.position.setY(this.position.getY() + 1);
+        return;
     }
 
     @Override
     public void down() {
-        this.position.setY(this.position.getY() - 1);
+        this.position.setY(this.position.getY() + 10);
     }
 
     @Override
     public void left() {
-        this.position.setX(this.position.getY() - 1);
+        this.position.setX(this.position.getX() - movementSPD);
     }
 
     @Override
     public void right() {
-        this.position.setX(this.position.getY() + 1);
+        this.position.setX(this.position.getX() + movementSPD);
     }
     public void setImage(Image image){this.image = image;}
     @Override
@@ -94,10 +93,6 @@ public class Enemy extends
         return Layer.FOREGROUND;
     }
 
-    @Override
-    protected Projectile createProjectile() {
-        Projectile projectile = new EnemyProjectile(new Vector2D(this.getPosition().getX(), this.getPosition().getY() + 2));
-        return projectile;    }
 
     public void setHealth(double health) {
         this.health = health;
@@ -110,6 +105,6 @@ public class Enemy extends
 
     @Override
     public void update() {
-
+        left();
     }
 }

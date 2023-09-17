@@ -60,11 +60,11 @@ public interface ConfigReader {
             e.printStackTrace();
         }
     }
-    static List<List<Object>> readEnemiesData(){
+    static List<List<Object>> readEnemiesData(String filepath){
         List<List<Object>> result = new ArrayList<>();
         JSONParser jsonParser = new JSONParser();
         try{
-            Object object = jsonParser.parse(new FileReader(path));
+            Object object = jsonParser.parse(new FileReader(filepath));
             JSONObject jsonObject = (JSONObject) object;
             JSONArray jsonEnemies = (JSONArray) jsonObject.get("Enemies");
             for(Object obj: jsonEnemies){
@@ -86,12 +86,11 @@ public interface ConfigReader {
 
         return result;
     }
-
-    static List<HashMap<String, Double[]>> readBunkersData(){
+    static List<HashMap<String, Double[]>> readBunkersData(String filepath){
         List<HashMap<String, Double[]>> result = new ArrayList<>();
         JSONParser jsonParser = new JSONParser();
         try{
-            Object object = jsonParser.parse(new FileReader(path));
+            Object object = jsonParser.parse(new FileReader(filepath));
             JSONObject jsonObject = (JSONObject) object;
             JSONArray jsonBunkers = (JSONArray) jsonObject.get("Bunkers");
             for(Object obj: jsonBunkers){

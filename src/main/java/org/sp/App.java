@@ -17,7 +17,7 @@ public class App extends Application {
     public void start(Stage primaryStage) {
         Map<String, String> params = getParameters().getNamed();
 
-        GameEngine model = new GameEngine("/resources/config.json");
+        GameEngine model = new GameEngine("src/main/resources/config.json");
         GameWindow window = new GameWindow(model);
         window.run();
 

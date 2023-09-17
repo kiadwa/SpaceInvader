@@ -1,6 +1,10 @@
 package org.sp.entities;
 
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import org.sp.ConfigReader;
 import org.sp.GameObject;
 import org.sp.logic.Damagable;
@@ -9,6 +13,8 @@ import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
 import org.sp.rendering.Renderable;
 
+import java.awt.*;
+
 public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, Collider {
     private Vector2D position = new Vector2D(0,0);
     private final Animator anim = null;
@@ -16,6 +22,7 @@ public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, 
     private double width = 25;
     private double height = 30;
     private  Image image = null;
+
 
     @Override
     public void takeDamage(double amount) {
@@ -66,6 +73,11 @@ public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, 
 
     @Override
     public void update() {
+        if(health == 300);
+        if(health == 200);
+        if(health == 100);
+        if(health == 0);
 
     }
 }
+

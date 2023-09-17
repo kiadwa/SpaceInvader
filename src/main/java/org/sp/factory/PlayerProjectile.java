@@ -1,24 +1,33 @@
-package org.sp.entities;
+package org.sp.factory;
 
 import javafx.scene.image.Image;
+import org.sp.GameObject;
 import org.sp.factory.Projectile;
 import org.sp.physics.Collider;
 import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Renderable;
 
-public class EnemyProjectile implements Projectile, Moveable, Renderable, Collider {
-    private Vector2D position = new Vector2D(0,0);
-    private final double width = 5;
-    private final double height = 10;
-    private final Image image = null;
+import java.io.File;
 
-    public EnemyProjectile(Vector2D position){
-        this.position = position;
+public class PlayerProjectile implements Projectile, Moveable, Renderable, Collider, GameObject {
+    private double velocity = 4;
+    private Vector2D position = null;
+    private final double width = 40;
+    private final double height = 60;
+    private  Image image = new Image(new File("src/main/resources/projectile.png").toURI().toString(), width, height, true, true);
+
+    public PlayerProjectile(Vector2D v2D) { this.position= v2D;
     }
+
     @Override
     public void tick() {
 
+    }
+
+    @Override
+    public double getDamage() {
+        return damage;
     }
 
     @Override
@@ -37,13 +46,18 @@ public class EnemyProjectile implements Projectile, Moveable, Renderable, Collid
     }
 
     @Override
-    public void up() {
+    public void setVelocity(double velocity) {
+        return;
+    }
 
+    @Override
+    public void up() {
+        this.position.setY(this.position.getY() - velocity);
     }
 
     @Override
     public void down() {
-        this.position.setY(this.position.getY() - 1);
+        return;
     }
 
     @Override
@@ -79,5 +93,15 @@ public class EnemyProjectile implements Projectile, Moveable, Renderable, Collid
     @Override
     public Layer getLayer() {
         return Layer.FOREGROUND;
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void update() {
+        up();
     }
 }
