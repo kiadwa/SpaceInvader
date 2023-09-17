@@ -7,9 +7,8 @@ import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
 
 public class EnemyBuilder implements ObjectBuilder, ConfigReader {
-    Enemy product;
+    Enemy product = new Enemy();
     public Enemy createEnemy(){
-        this.product = new Enemy();
         return this.product;
     }
     @Override

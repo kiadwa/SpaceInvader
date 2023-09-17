@@ -21,7 +21,7 @@ public class BunkerBuilderDirector implements ConfigReader {
             builder.setWidth(size[0]);
             Vector2D v2D = new Vector2D(coord[0], coord[1]);
             builder.setVector2D(v2D);
-            Image image = new Image(new File("src/main/resources/player.png").toURI().toString(), size[0], size[1], true, true);
+            Image image = new Image(new File("src/main/resources/bunker.png").toURI().toString(), size[0], size[1], true, true);
             builder.setImage(image);
             Bunker bunker = builder.create();
             result.add(bunker);
