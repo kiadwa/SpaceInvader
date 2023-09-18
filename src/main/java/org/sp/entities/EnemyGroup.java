@@ -37,4 +37,7 @@ public class EnemyGroup {
             }
         }
     }
+    public void enemyShoot(){
+
+    }
 }

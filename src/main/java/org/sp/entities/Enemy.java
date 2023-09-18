@@ -3,10 +3,9 @@ package org.sp.entities;
 import javafx.scene.image.Image;
 import org.sp.ConfigReader;
 import org.sp.GameObject;
-import org.sp.factory.EnemyProjectile;
-import org.sp.factory.Projectile;
-import org.sp.factory.ProjectileFactory;
+import org.sp.factory.*;
 import org.sp.logic.Damagable;
+import org.sp.physics.BoxCollider;
 import org.sp.physics.Collider;
 import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
@@ -29,10 +28,17 @@ public class Enemy
     private Image image;
     private boolean Fastprojectile = false;
     private double movementSPD = 0.5;
+    private BoxCollider boxCollider;
 
     public Enemy() {
     }
-
+    public EnemyProjectile shoot(){
+        EnemyProjectileFactory enemyProjectileFactory = new EnemyProjectileFactory();
+        EnemyProjectile projectile = enemyProjectileFactory.createProjectile(new Vector2D(this.position.getX() - 8,
+                                                                                            this.position.getY()));
+        return projectile;
+    }
+    public void setBoxCollider(BoxCollider boxCollider){this.boxCollider = boxCollider;}
     @Override
     public void takeDamage(double amount) {
         this.health -= amount;
@@ -105,6 +111,6 @@ public class Enemy
 
     @Override
     public void update() {
-        left();
+
     }
 }

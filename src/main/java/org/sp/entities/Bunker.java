@@ -8,6 +8,7 @@ import javafx.scene.shape.Circle;
 import org.sp.ConfigReader;
 import org.sp.GameObject;
 import org.sp.logic.Damagable;
+import org.sp.physics.BoxCollider;
 import org.sp.physics.Collider;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
@@ -22,8 +23,9 @@ public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, 
     private double width = 25;
     private double height = 30;
     private  Image image = null;
+    private BoxCollider boxCollider;
 
-
+    public void setBoxCollider(BoxCollider boxCollider){this.boxCollider = boxCollider;}
     @Override
     public void takeDamage(double amount) {
         this.health -= amount;
@@ -65,6 +67,7 @@ public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, 
     public Layer getLayer() {
         return Layer.FOREGROUND;
     }
+
 
     @Override
     public void start() {

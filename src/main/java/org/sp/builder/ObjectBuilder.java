@@ -1,6 +1,7 @@
 package org.sp.builder;
 
 import javafx.scene.image.Image;
+import org.sp.physics.BoxCollider;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
 
@@ -12,4 +13,5 @@ public interface ObjectBuilder {
     public void setHeight(double height);
     public void setAnimator(Animator animator);
     public void setProjectileType(boolean bool);
+    public void setBoxCollider(BoxCollider boxCollider);
 }

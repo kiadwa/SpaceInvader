@@ -7,6 +7,7 @@ public interface EntityView {
     void update(double xViewportOffset, double yViewportOffset);
 
     boolean matchesEntity(Renderable entity);
+    Renderable getEntity();
 
     void markForDelete();
 

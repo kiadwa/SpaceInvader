@@ -60,21 +60,29 @@ public class GameWindow implements ConfigReader {
         List<Renderable> renderables = model.getRenderables();
         for (Renderable entity : renderables) {
             boolean notFound = true;
+            boolean existInRenderables = true;
             for (EntityView view : entityViews) {
+                //if there are already entity view and exist renderable object, update its position.
                 if (view.matchesEntity(entity)) {
                     notFound = false;
                     view.update(xViewportOffset, yViewportOffset);
                     break;
                 }
             }
+            // if there is renderables object and no entity view of it,
+            // create new entity view and add it to 'entityViews'
             if (notFound) {
                 EntityView entityView = new EntityViewImpl(entity);
                 entityViews.add(entityView);
                 pane.getChildren().add(entityView.getNode());
             }
         }
-
+        //removing object
         for (EntityView entityView : entityViews) {
+            Renderable renderable = entityView.getEntity();
+            if(!renderables.contains(renderable)){
+                entityView.markForDelete();
+            }
             if (entityView.isMarkedForDelete()) {
                 pane.getChildren().remove(entityView.getNode());
             }

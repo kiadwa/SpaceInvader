@@ -3,6 +3,7 @@ package org.sp.builder;
 import javafx.scene.image.Image;
 import org.sp.ConfigReader;
 import org.sp.entities.Bunker;
+import org.sp.physics.BoxCollider;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
 
@@ -44,5 +45,10 @@ public class BunkerBuilder implements ObjectBuilder{
     @Override
     public void setProjectileType(boolean bool) {
         return;
+    }
+
+    @Override
+    public void setBoxCollider(BoxCollider boxCollider) {
+        this.product.setBoxCollider(boxCollider);
     }
 }

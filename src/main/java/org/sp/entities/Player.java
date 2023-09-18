@@ -1,11 +1,13 @@
 package org.sp.entities;
 
 import org.sp.ConfigReader;
+import org.sp.GameObject;
 import org.sp.factory.PlayerProjectile;
 import org.sp.factory.PlayerProjectileFactory;
 import org.sp.factory.Projectile;
 import org.sp.factory.ProjectileFactory;
 import org.sp.logic.Damagable;
+import org.sp.physics.BoxCollider;
 import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
@@ -16,7 +18,7 @@ import javafx.scene.image.Image;
 import java.io.File;
 import java.util.HashMap;
 
-public class Player implements Moveable, Damagable, Renderable, ConfigReader {
+public class Player implements Moveable, Damagable, Renderable, ConfigReader, GameObject {
 
     private  Vector2D position = new Vector2D(0,0);
     private final Animator anim = null;
@@ -26,10 +28,11 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader {
     private final Image image;
     private int lives = 0;
     private String color;
+    private BoxCollider boxCollider;
 
 
     public Player(){
-        this.image = new Image(new File("src/main/resources/player.png").toURI().toString(), width, height, true, true);
+        this.image = new Image(new File("src/main/resources/player.png").toURI().toString(), width, height, false, true);
         setPlayerData();
 
     }
@@ -42,6 +45,7 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader {
         this.color = (String) playerData.get("color");
         System.out.println(this.getPosition().getX());
         System.out.println(this.getPosition().getY());
+        this.boxCollider = new BoxCollider(width,height,position);
     }
 
 
@@ -56,6 +60,7 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader {
             return 100;
         return health;
     }
+    public BoxCollider getBoxCollider(){return this.boxCollider;}
 
     @Override
     public boolean isAlive() {
@@ -82,11 +87,11 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader {
         this.position.setX(this.position.getX() + 1);
     }
 
-    public Projectile shoot(){
+    public PlayerProjectile shoot(){
         // todo
         PlayerProjectileFactory playerProjectileFactory = new PlayerProjectileFactory();
-        Projectile projectile = playerProjectileFactory.createProjectile(new Vector2D(this.position.getX() - 8 ,
-                this.position.getY()));
+        PlayerProjectile projectile = playerProjectileFactory.createProjectile(new Vector2D(this.position.getX() + 3 ,
+                this.position.getY() + 2));
         return projectile;
     }
 
@@ -115,4 +120,13 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader {
         return Layer.FOREGROUND;
     }
 
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void update() {
+        boxCollider.setPosition(position);
+    }
 }

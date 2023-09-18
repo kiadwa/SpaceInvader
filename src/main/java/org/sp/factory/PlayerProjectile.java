@@ -3,6 +3,7 @@ package org.sp.factory;
 import javafx.scene.image.Image;
 import org.sp.GameObject;
 import org.sp.factory.Projectile;
+import org.sp.physics.BoxCollider;
 import org.sp.physics.Collider;
 import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
@@ -13,11 +14,15 @@ import java.io.File;
 public class PlayerProjectile implements Projectile, Moveable, Renderable, Collider, GameObject {
     private double velocity = 4;
     private Vector2D position = null;
-    private final double width = 40;
-    private final double height = 60;
-    private  Image image = new Image(new File("src/main/resources/projectile.png").toURI().toString(), width, height, true, true);
+    private final double width = 4;
+    private final double height = 7;
+    private BoxCollider boxCollider;
+    private  Image image = new Image(new File("src/main/resources/projectile.png").toURI().toString(), width, height, false, true);
 
-    public PlayerProjectile(Vector2D v2D) { this.position= v2D;
+    public PlayerProjectile(Vector2D v2D) {
+        this.position= v2D;
+        this.boxCollider = new BoxCollider(width,height,v2D);
+        this.boxCollider.setPosition(v2D);
     }
 
     @Override
@@ -103,5 +108,6 @@ public class PlayerProjectile implements Projectile, Moveable, Renderable, Colli
     @Override
     public void update() {
         up();
+        boxCollider.setPosition(position);
     }
 }

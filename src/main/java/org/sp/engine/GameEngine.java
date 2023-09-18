@@ -14,8 +14,10 @@ import org.sp.entities.Bunker;
 import org.sp.entities.Enemy;
 import org.sp.entities.EnemyGroup;
 import org.sp.entities.Player;
+import org.sp.factory.EnemyProjectile;
 import org.sp.factory.PlayerProjectile;
 import org.sp.factory.Projectile;
+import org.sp.physics.BoxCollider;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Renderable;
 
@@ -26,6 +28,7 @@ public class GameEngine implements ConfigReader {
 
 	private List<GameObject> gameobjects;
 	private List<Renderable> renderables;
+	private  List<Projectile> projectiles = new ArrayList<>();
 	private EnemyGroup enemyGroup= new EnemyGroup();
 	private Player player;
 
@@ -43,6 +46,7 @@ public class GameEngine implements ConfigReader {
 		// generate bunkers
 		for(HashMap<String, Double[]> hm: bunkerData){
 			BunkerBuilder bunkerBuilder = new BunkerBuilder();
+			Bunker bunker = bunkerBuilder.create();
 			Vector2D v2D = new Vector2D(hm.get("position")[0],hm.get("position")[1]);
 			bunkerBuilder.setHeight(hm.get("size")[0]);
 			bunkerBuilder.setWidth(hm.get("size")[1]);
@@ -50,22 +54,24 @@ public class GameEngine implements ConfigReader {
 					hm.get("size")[0],
 					hm.get("size")[1], true, true));
 			bunkerBuilder.setVector2D(v2D);
-			Bunker bunker = bunkerBuilder.create();
+			bunkerBuilder.setBoxCollider(new BoxCollider(hm.get("size")[0], hm.get("size")[1], v2D));
 			renderables.add(bunker);
-			//gameobjects.add(bunker);
+			gameobjects.add(bunker);
 		}
 		//generate enemy
 		for(List<Object> lobj: enemyData){
 			EnemyBuilder enemyBuilder = new EnemyBuilder();
+			Enemy enemy = enemyBuilder.createEnemy();
 			Vector2D v2D = new Vector2D(((Number)lobj.get(0)).doubleValue(),((Number) lobj.get(1)).doubleValue());
 			String projectileFast = new String((String) lobj.get(2));
 			enemyBuilder.setImage(new Image(new File("src/main/resources/enemy_white.png").toURI().toString(),
 					100,
 					25,
-					true, true));
+					true,
+					true));
 			enemyBuilder.setVector2D(v2D);
             enemyBuilder.setProjectileType(projectileFast.equals("fast_straight"));
-			Enemy enemy = enemyBuilder.createEnemy();
+			enemyBuilder.setBoxCollider(new BoxCollider(enemy.getWidth(),enemy.getHeight(),v2D));
 			renderables.add(enemy);
 			//gameobjects.add(enemy);
 			enemyGroup.addEnemy(enemy);
@@ -88,13 +94,21 @@ public class GameEngine implements ConfigReader {
 	public void update(){
 		movePlayer();
 		for(GameObject go: gameobjects){
-			if(go instanceof Projectile) System.out.println(((Projectile) go).getPosition().getY());
 			go.update();
 		}
-		//movev enemy in group
+		//move enemy in group
 		enemyGroup.moveEnemy();
 		enemyGroup.updateMoveScheme();
 		// remove projectile if reach end of screen. (1.0 is out of screen)
+		if(isPlayerProjectileReachEnd()){
+			Projectile projectile = projectiles.remove(projectiles.size() - 1);
+			renderables.remove(projectile);
+			gameobjects.remove(projectile);
+		}
+		//System.out.println(projectiles.size());
+		//System.out.println(renderables.size());
+		//System.out.println(gameobjects.size());
+
 
 		// ensure that renderable foreground objects don't go off-screen
 		for(Renderable ro: renderables){
@@ -117,6 +131,8 @@ public class GameEngine implements ConfigReader {
 				ro.getPosition().setY(1);
 			}
 		}
+		//ensure to detect any collision that happens
+		//todo
 	}
 
 	public List<Renderable> getRenderables(){
@@ -140,11 +156,17 @@ public class GameEngine implements ConfigReader {
 	}
 
 	public boolean shootPressed(){
-		if(containsProjectileRenderable(renderables) || containsProjectileGameObjects(gameobjects)) return false;
-		Projectile projectile = player.shoot();
-		renderables.add(projectile);
-		gameobjects.add(projectile);
-		return true;
+		boolean existenceCheck = (!projectiles.isEmpty());
+		boolean projectileReachEnd = isPlayerProjectileReachEnd();
+		if(existenceCheck && !projectileReachEnd){
+			return false;
+		}else{
+			Projectile projectile = player.shoot();
+			renderables.add(projectile);
+			gameobjects.add(projectile);
+			projectiles.add(projectile);
+			return true;
+		}
 	}
 
 	private void movePlayer(){
@@ -156,19 +178,55 @@ public class GameEngine implements ConfigReader {
 			player.right();
 		}
 	}
-	public static boolean containsProjectileRenderable(List<Renderable> array) {
+
+	public boolean isPlayerProjectileReachEnd(){
+		if(projectiles.size() == 0) return false;
+		else{
+			for(Projectile projectile: projectiles){
+				if(projectile.getPosition().getY() <= 1) return true;
+			}
+		}
+		return false;
+	}
+
+	public void removeProjectile(Projectile projectile){
+		if(!projectiles.contains(projectile)) return;
+		projectiles.remove(projectile);
+	}
+
+	public static boolean containsPlayerProjectileRenderable(List<Renderable> array) {
 		for (Object obj : array) {
-			if (obj != null && obj instanceof Projectile) {
+			if (obj != null && obj instanceof PlayerProjectile) {
 				return true;
 			}
 		}
 		return false;
 	}
-	public static boolean containsProjectileGameObjects (List<GameObject> array) {
+	public static boolean containsPlayerProjectileGameObjects (List<GameObject> array) {
 		for (Object obj : array) {
-			if (obj != null && obj instanceof Projectile) {
+			if (obj != null && obj instanceof PlayerProjectile) {
 				return true;
 			}
+		}
+		return false;
+	}
+	public static boolean containsEnemyProjectileRenderable(List<Renderable> array) {
+		int cnt = 3;
+		for (Object obj : array) {
+			if (obj != null && obj instanceof EnemyProjectile) {
+				cnt --;
+			}
+			if(cnt == 0) return true;
+		}
+		return false;
+	}
+	public static boolean containsEnemyProjectileGameObjects (List<GameObject> array) {
+		int cnt = 3;
+		for (Object obj : array) {
+			if (obj != null && obj instanceof EnemyProjectile) {
+				cnt --;
+			}
+			if(cnt == 0) return true;
 		}
 		return false;
 	}

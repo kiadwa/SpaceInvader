@@ -50,7 +50,8 @@ public class EntityViewImpl implements EntityView {
     public void markForDelete() {
         delete = true;
     }
-
+    @Override
+    public Renderable getEntity(){return this.entity;}
     @Override
     public Node getNode() {
         return node;

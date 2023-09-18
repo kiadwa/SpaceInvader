@@ -3,6 +3,7 @@ package org.sp.builder;
 import javafx.scene.image.Image;
 import org.sp.ConfigReader;
 import org.sp.entities.Enemy;
+import org.sp.physics.BoxCollider;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
 
@@ -41,9 +42,15 @@ public class EnemyBuilder implements ObjectBuilder, ConfigReader {
 
     }
 
+
     @Override
     public void setProjectileType(boolean bool) {
         this.product.setFastprojectile(bool);
+    }
+
+    @Override
+    public void setBoxCollider(BoxCollider boxCollider) {
+        this.product.setBoxCollider(boxCollider);
     }
 
 }

@@ -26,4 +26,6 @@ public class BoxCollider implements Collider {
     public Vector2D getPosition(){
         return this.position;
     }
+
+    public void setPosition(Vector2D vector2D){this.position = vector2D;}
 }

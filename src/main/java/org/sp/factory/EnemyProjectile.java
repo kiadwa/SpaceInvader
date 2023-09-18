@@ -8,6 +8,8 @@ import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Renderable;
 
+import java.io.File;
+
 public class EnemyProjectile implements
         Projectile,
         Moveable,
@@ -18,9 +20,11 @@ public class EnemyProjectile implements
     private Vector2D position = new Vector2D(0,0);
     private final double width = 5;
     private final double height = 10;
-    private final Image image = null;
+    private  Image image = null;
 
-    public EnemyProjectile(Vector2D v2D) { this.position = v2D;
+    public EnemyProjectile(Vector2D v2D) {
+        this.position = v2D;
+        this.image = new Image(new File("src/main/resources/projectile.png").toURI().toString(), width, height, true, true);
     }
 
 
