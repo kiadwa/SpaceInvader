@@ -25,10 +25,13 @@ import org.sp.rendering.Renderable;
  * This class manages the main loop and logic of the game
  */
 public class GameEngine implements ConfigReader {
-
+	private BoxCollider playerProjectileHitBox;
+	private BoxCollider playerHitBox;
 	private List<GameObject> gameobjects;
 	private List<Renderable> renderables;
-	private  List<Projectile> projectiles = new ArrayList<>();
+	private  List<Projectile> projectiles;
+	private List<BoxCollider> enemyHitBox;
+	private List<BoxCollider> bunkersHitBox;
 	private EnemyGroup enemyGroup= new EnemyGroup();
 	private Player player;
 
@@ -39,6 +42,9 @@ public class GameEngine implements ConfigReader {
 	public GameEngine(String config){
 		gameobjects = new ArrayList<GameObject>();
 		renderables = new ArrayList<Renderable>();
+		projectiles = new ArrayList<>();
+		enemyHitBox = new ArrayList<>();
+		bunkersHitBox = new ArrayList<>();
 
 		// read the config here
 		List<HashMap<String, Double[]>> bunkerData = ConfigReader.readBunkersData(config);
@@ -48,15 +54,20 @@ public class GameEngine implements ConfigReader {
 			BunkerBuilder bunkerBuilder = new BunkerBuilder();
 			Bunker bunker = bunkerBuilder.create();
 			Vector2D v2D = new Vector2D(hm.get("position")[0],hm.get("position")[1]);
-			bunkerBuilder.setHeight(hm.get("size")[0]);
-			bunkerBuilder.setWidth(hm.get("size")[1]);
+			bunkerBuilder.setHeight(hm.get("size")[1]);
+			bunkerBuilder.setWidth(hm.get("size")[0]);
 			bunkerBuilder.setImage(new Image(new File("src/main/resources/bunker.png").toURI().toString(),
 					hm.get("size")[0],
-					hm.get("size")[1], true, true));
+					hm.get("size")[1],
+					false,
+					true,
+					false));
 			bunkerBuilder.setVector2D(v2D);
-			bunkerBuilder.setBoxCollider(new BoxCollider(hm.get("size")[0], hm.get("size")[1], v2D));
+			BoxCollider boxCollider = new BoxCollider(hm.get("size")[0], hm.get("size")[1], v2D);
+			bunkerBuilder.setBoxCollider(boxCollider);
 			renderables.add(bunker);
 			gameobjects.add(bunker);
+			bunkersHitBox.add(boxCollider);
 		}
 		//generate enemy
 		for(List<Object> lobj: enemyData){
@@ -64,17 +75,20 @@ public class GameEngine implements ConfigReader {
 			Enemy enemy = enemyBuilder.createEnemy();
 			Vector2D v2D = new Vector2D(((Number)lobj.get(0)).doubleValue(),((Number) lobj.get(1)).doubleValue());
 			String projectileFast = new String((String) lobj.get(2));
-			enemyBuilder.setImage(new Image(new File("src/main/resources/enemy_white.png").toURI().toString(),
-					100,
-					25,
+			enemyBuilder.setImage(new Image(new File("src/main/resources/enemy.png").toURI().toString(),
+					enemy.getWidth(),
+					enemy.getHeight(),
 					true,
-					true));
+					true,
+					false));
 			enemyBuilder.setVector2D(v2D);
             enemyBuilder.setProjectileType(projectileFast.equals("fast_straight"));
-			enemyBuilder.setBoxCollider(new BoxCollider(enemy.getWidth(),enemy.getHeight(),v2D));
+			BoxCollider boxCollider = new BoxCollider(enemy.getWidth(),enemy.getHeight(),v2D);
+			enemyBuilder.setBoxCollider(boxCollider);
 			renderables.add(enemy);
 			//gameobjects.add(enemy);
 			enemyGroup.addEnemy(enemy);
+			enemyHitBox.add(boxCollider);
 		}
 
 
@@ -84,6 +98,7 @@ public class GameEngine implements ConfigReader {
 
 		player = new Player();
 		renderables.add(player);
+		playerHitBox = player.getBoxCollider();
 
 
 	}
@@ -104,6 +119,7 @@ public class GameEngine implements ConfigReader {
 			Projectile projectile = projectiles.remove(projectiles.size() - 1);
 			renderables.remove(projectile);
 			gameobjects.remove(projectile);
+			if(!(playerProjectileHitBox == null)) playerProjectileHitBox = null;
 		}
 		//System.out.println(projectiles.size());
 		//System.out.println(renderables.size());
@@ -133,8 +149,31 @@ public class GameEngine implements ConfigReader {
 		}
 		//ensure to detect any collision that happens
 		//todo
+		checkBunkerHit();
+		checkEnemyHit();
 	}
-
+	public void checkEnemyHit(){
+		for(BoxCollider boxCollider: enemyHitBox){
+			if(playerProjectileHitBox!= null && playerProjectileHitBox.isColliding(boxCollider)){
+				System.out.println("collided");
+				playerProjectileHitBox = null;
+				Projectile projectile = projectiles.remove(projectiles.size() - 1);
+				renderables.remove(projectile);
+				gameobjects.remove(projectile);
+			}
+		}
+	}
+	public void checkBunkerHit(){
+		for(BoxCollider boxCollider: bunkersHitBox){
+			if(playerProjectileHitBox!= null && playerProjectileHitBox.isColliding(boxCollider)){
+				System.out.println("collided");
+				playerProjectileHitBox = null;
+				Projectile projectile = projectiles.remove(projectiles.size() - 1);
+				renderables.remove(projectile);
+				gameobjects.remove(projectile);
+			}
+		}
+	}
 	public List<Renderable> getRenderables(){
 		return renderables;
 	}
@@ -162,6 +201,7 @@ public class GameEngine implements ConfigReader {
 			return false;
 		}else{
 			Projectile projectile = player.shoot();
+			playerProjectileHitBox = projectile.getBoxCollider();
 			renderables.add(projectile);
 			gameobjects.add(projectile);
 			projectiles.add(projectile);

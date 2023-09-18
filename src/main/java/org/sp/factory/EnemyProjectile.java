@@ -3,6 +3,7 @@ package org.sp.factory;
 import javafx.scene.image.Image;
 import org.sp.GameObject;
 import org.sp.factory.Projectile;
+import org.sp.physics.BoxCollider;
 import org.sp.physics.Collider;
 import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
@@ -14,13 +15,13 @@ public class EnemyProjectile implements
         Projectile,
         Moveable,
         Renderable,
-        Collider,
         GameObject {
     private double velocity = 10;
     private Vector2D position = new Vector2D(0,0);
     private final double width = 5;
     private final double height = 10;
     private  Image image = null;
+    BoxCollider boxCollider;
 
     public EnemyProjectile(Vector2D v2D) {
         this.position = v2D;
@@ -56,6 +57,16 @@ public class EnemyProjectile implements
     @Override
     public void setVelocity(double velocity) {
         this.velocity = velocity;
+    }
+
+    @Override
+    public BoxCollider getBoxCollider() {
+        return this.boxCollider;
+    }
+
+    @Override
+    public void setBoxCollider(BoxCollider boxCollider) {
+        this.boxCollider = boxCollider;
     }
 
     @Override

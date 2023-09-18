@@ -1,7 +1,11 @@
 package org.sp.physics;
 
-public class BoxCollider implements Collider {
+import org.sp.logic.Damagable;
 
+import javax.swing.text.html.parser.Entity;
+
+public class BoxCollider implements Collider {
+    private Damagable damagable;
     private double width;
     private double height;
     private Vector2D position;
@@ -28,4 +32,7 @@ public class BoxCollider implements Collider {
     }
 
     public void setPosition(Vector2D vector2D){this.position = vector2D;}
+    public Damagable setDamagable(){return this.damagable;}
+    public void setDamagable(Damagable damagable){this.damagable = damagable;}
+
 }

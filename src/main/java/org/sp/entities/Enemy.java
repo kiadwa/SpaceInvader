@@ -106,11 +106,9 @@ public class Enemy
 
     @Override
     public void start() {
-
     }
 
     @Override
     public void update() {
-
     }
 }

@@ -7,6 +7,9 @@ public class EnemyGroup {
     private boolean moveLeft = true;
     private boolean moveDown = false;
     private List<Enemy> enemyList = new ArrayList<>();
+    private int enemyCount = 0;
+
+    public void setEnemyCount(int num){this.enemyCount = num;}
 
     public void addEnemy(Enemy enemy){
         enemyList.add(enemy);
@@ -24,6 +27,8 @@ public class EnemyGroup {
         }
     }
     public void updateMoveScheme(){
+        //todo make enemy move faster after each take down.
+
         if(enemyList.get(0).getPosition().getX() <= 1) {
             this.moveLeft = false;
             for(Enemy enemy: enemyList){

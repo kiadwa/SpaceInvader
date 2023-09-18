@@ -11,7 +11,12 @@ import org.sp.rendering.Renderable;
 
 import java.io.File;
 
-public class PlayerProjectile implements Projectile, Moveable, Renderable, Collider, GameObject {
+public class PlayerProjectile
+        implements
+        Projectile,
+        Moveable,
+        Renderable,
+        GameObject {
     private double velocity = 4;
     private Vector2D position = null;
     private final double width = 4;
@@ -53,6 +58,16 @@ public class PlayerProjectile implements Projectile, Moveable, Renderable, Colli
     @Override
     public void setVelocity(double velocity) {
         return;
+    }
+
+    @Override
+    public BoxCollider getBoxCollider() {
+        return this.boxCollider;
+    }
+
+    @Override
+    public void setBoxCollider(BoxCollider boxCollider) {
+
     }
 
     @Override
