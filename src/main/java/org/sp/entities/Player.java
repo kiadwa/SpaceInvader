@@ -32,7 +32,10 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader, Ga
 
 
     public Player(){
-        this.image = new Image(new File("src/main/resources/player.png").toURI().toString(), width, height, false, true);
+        this.image = new Image(new File("src/main/resources/player.png").toURI().toString(),
+                width,
+                height,
+                true, true);
         setPlayerData();
 
     }
@@ -45,7 +48,7 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader, Ga
         this.color = (String) playerData.get("color");
         System.out.println(this.getPosition().getX());
         System.out.println(this.getPosition().getY());
-        this.boxCollider = new BoxCollider(width,height,position);
+        this.boxCollider = new BoxCollider(width,height,position, this);
     }
 
 

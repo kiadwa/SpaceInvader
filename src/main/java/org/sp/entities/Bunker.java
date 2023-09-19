@@ -13,6 +13,7 @@ import org.sp.physics.Collider;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
 import org.sp.rendering.Renderable;
+import org.sp.state.BunkerState;
 
 import java.awt.*;
 
@@ -20,11 +21,15 @@ public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, 
     private Vector2D position = new Vector2D(0,0);
     private final Animator anim = null;
     private double health = 300;
-    private double width = 25;
-    private double height = 30;
+    private double width;
+    private double height;
     private  Image image = null;
     private BoxCollider boxCollider;
+    private BunkerState currentState;
 
+
+    public void setCurrentState(BunkerState state){this.currentState = state;}
+    public void changeColor(){currentState.changeColor(this);}
     public void setBoxCollider(BoxCollider boxCollider){this.boxCollider = boxCollider;}
     @Override
     public void takeDamage(double amount) {

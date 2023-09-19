@@ -1,6 +1,7 @@
 package org.sp.physics;
 
 import org.sp.logic.Damagable;
+import org.sp.rendering.Renderable;
 
 import javax.swing.text.html.parser.Entity;
 
@@ -9,11 +10,13 @@ public class BoxCollider implements Collider {
     private double width;
     private double height;
     private Vector2D position;
+    Renderable entity;
 
-    public BoxCollider(double width, double height, Vector2D position){
+    public BoxCollider(double width, double height, Vector2D position, Renderable entity){
         this.height = height;
         this.width = width;
         this.position = position;
+        this.entity = entity;
     }
 
     @Override

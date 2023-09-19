@@ -26,7 +26,7 @@ public class PlayerProjectile
 
     public PlayerProjectile(Vector2D v2D) {
         this.position= v2D;
-        this.boxCollider = new BoxCollider(width,height,v2D);
+        this.boxCollider = new BoxCollider(width,height,v2D,this);
         this.boxCollider.setPosition(v2D);
     }
 
@@ -57,7 +57,7 @@ public class PlayerProjectile
 
     @Override
     public void setVelocity(double velocity) {
-        return;
+        this.velocity = velocity;
     }
 
     @Override

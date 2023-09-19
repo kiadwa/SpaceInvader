@@ -20,6 +20,7 @@ import org.sp.factory.Projectile;
 import org.sp.physics.BoxCollider;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Renderable;
+import org.sp.state.BunkerGreen;
 
 /**
  * This class manages the main loop and logic of the game
@@ -54,17 +55,19 @@ public class GameEngine implements ConfigReader {
 			BunkerBuilder bunkerBuilder = new BunkerBuilder();
 			Bunker bunker = bunkerBuilder.create();
 			Vector2D v2D = new Vector2D(hm.get("position")[0],hm.get("position")[1]);
-			bunkerBuilder.setHeight(hm.get("size")[1]);
-			bunkerBuilder.setWidth(hm.get("size")[0]);
-			bunkerBuilder.setImage(new Image(new File("src/main/resources/bunker.png").toURI().toString(),
-					hm.get("size")[0],
-					hm.get("size")[1],
-					false,
-					true,
-					false));
+			Double width = hm.get("size")[0];
+			Double height = hm.get("size")[1];
+			//builder
+			bunkerBuilder.setHeight(height);
+			bunkerBuilder.setWidth(width);
+			//state
+			bunker.setCurrentState(new BunkerGreen());
+			bunker.changeColor();
+			//builder
 			bunkerBuilder.setVector2D(v2D);
-			BoxCollider boxCollider = new BoxCollider(hm.get("size")[0], hm.get("size")[1], v2D);
+			BoxCollider boxCollider = new BoxCollider(hm.get("size")[0], hm.get("size")[1],v2D,bunker);
 			bunkerBuilder.setBoxCollider(boxCollider);
+			//add into GameEngine
 			renderables.add(bunker);
 			gameobjects.add(bunker);
 			bunkersHitBox.add(boxCollider);
@@ -83,7 +86,7 @@ public class GameEngine implements ConfigReader {
 					false));
 			enemyBuilder.setVector2D(v2D);
             enemyBuilder.setProjectileType(projectileFast.equals("fast_straight"));
-			BoxCollider boxCollider = new BoxCollider(enemy.getWidth(),enemy.getHeight(),v2D);
+			BoxCollider boxCollider = new BoxCollider(enemy.getWidth(),enemy.getHeight(),v2D,enemy);
 			enemyBuilder.setBoxCollider(boxCollider);
 			renderables.add(enemy);
 			//gameobjects.add(enemy);
