@@ -41,10 +41,12 @@ public class Enemy
         EnemyProjectileFactory enemyProjectileFactory = new EnemyProjectileFactory();
         EnemyProjectile projectile = enemyProjectileFactory.createProjectile(new Vector2D(this.position.getX(),
                                                                                             this.position.getY() + 2));
-
+        projectile.setProjectileStrategy(new EnemyProjectileChange());
         if(Fastprojectile){
-            projectile.fastPorjectileStrategy();
+
+            projectile.fastProjectileStrategy();
         }else{
+
             projectile.slowProjectileStrategy();
         }
         return projectile;
@@ -54,6 +56,7 @@ public class Enemy
     public void takeDamage(double amount) {
         this.health -= amount;
     }
+    public void increaseMovementSPD(){this.movementSPD += 0.05;}
 
     public void setFastprojectile(boolean bool){this.Fastprojectile = bool;}
     @Override

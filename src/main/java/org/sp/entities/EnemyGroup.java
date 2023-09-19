@@ -1,55 +1,65 @@
 package org.sp.entities;
 
-import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class EnemyGroup {
     private boolean moveLeft = true;
-    private boolean moveDown = false;
-    private List<Enemy> enemyList = new ArrayList<>();
+    private List<List<Enemy>> enemyList = new CopyOnWriteArrayList<>();
     private int enemyCount = 0;
 
-    public void setEnemyCount(int num){this.enemyCount = num;}
+    public void setEnemyCount(){this.enemyCount = getRealTimeCount();}
 
-    public void addEnemy(Enemy enemy){
-        enemyList.add(enemy);
+    public void addEnemy(List<Enemy> enemylist){
+        enemyList.add(enemylist);
     }
-    public void setMoveDown(boolean bool){this.moveDown=bool;}
-    public void setMoveLeft(boolean bool){this.moveLeft=bool;}
-
-
-
+    public void removeEnemy(Enemy enemy){
+        for(List<Enemy> enemies: enemyList)
+            enemies.remove(enemy);
+        }
+    public int getRealTimeCount(){return this.enemyList.get(0).size() + this.enemyList.get(1).size();}
+    public List<List<Enemy>> getEnemyList(){return this.enemyList;}
     public void moveEnemy(){
-        for(Enemy enemy: enemyList){
-            if(!moveLeft) {
-                enemy.right();
-            }
-            else {
-                enemy.left();
+        for(List<Enemy> enemylist: enemyList){
+            for(Enemy enemy: enemylist) {
+                if (!moveLeft) {
+                    enemy.right();
+                } else {
+                    enemy.left();
+                }
             }
         }
     }
     public void updateMoveScheme(){
         //todo make enemy move faster after each take down.
-
-        if(enemyList.get(0).getPosition().getX() <= 1) {
+        if(enemyList.get(0).isEmpty() && enemyList.get(1).isEmpty()) return;
+        if(enemyList.get(0).get(0).getPosition().getX() <= 1
+                || enemyList.get(1).get(0).getPosition().getX() <= 1) {
             this.moveLeft = false;
-            for(Enemy enemy: enemyList){
-                enemy.down();
+            for(List<Enemy> enemylist: enemyList){
+                for(Enemy enemy: enemylist)
+                    enemy.down();
             }
         }
-        else if(enemyList.get(enemyList.size()-1).getPosition().getX() >= 574) {
+        else if(enemyList.get(0).get(enemyList.get(0).size()-1).getPosition().getX() >= 574
+                ||enemyList.get(1).get(enemyList.get(1).size()-1).getPosition().getX() >= 574) {
             this.moveLeft= true;
-            for(Enemy enemy: enemyList){
-                enemy.down();
+            for(List<Enemy> enemylist: enemyList){
+                for(Enemy enemy: enemylist)
+                    enemy.down();
             }
         }
+        if(getRealTimeCount() != this.enemyCount){
+            for(List<Enemy> enemylist: enemyList){
+                for(Enemy enemy: enemylist)
+                    enemy.increaseMovementSPD();
+            }
+            this.enemyCount = getRealTimeCount();
+        }
     }
-    public void enemyShoot(){
-        if(enemyList.isEmpty()) return;
 
-    }
 
 
 }

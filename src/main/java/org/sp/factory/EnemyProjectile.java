@@ -17,17 +17,18 @@ public class EnemyProjectile implements
         Moveable,
         Renderable,
         GameObject {
-    private double velocity = 4;
+    private double velocity = 1;
     private Vector2D position;
     private final double width = 4;
     private final double height = 7;
-    private  Image image = null;
+    private  Image image;
     BoxCollider boxCollider;
 
     EnemyProjectileStrategy projectileStrategy;
 
     public EnemyProjectile(Vector2D v2D) {
         this.position = v2D;
+        this.boxCollider = new BoxCollider(width,height,position,this);
     }
     public void setProjectileStrategy(EnemyProjectileStrategy projectileStrategy){
         this.projectileStrategy = projectileStrategy;
@@ -36,7 +37,7 @@ public class EnemyProjectile implements
         Image image =  new Image(new File("src/main/resources/purple_projectile.png").toURI().toString(), width, height, true, true);
         projectileStrategy.changeProjectileSprite(this, image);
     }
-    public void fastPorjectileStrategy(){
+    public void fastProjectileStrategy(){
         Image image =  new Image(new File("src/main/resources/blue_projectile.png").toURI().toString(), width, height, true, true);
         projectileStrategy.changeProjectileSprite(this,image);
         projectileStrategy.changeProjectileVelocity(this);
@@ -64,7 +65,7 @@ public class EnemyProjectile implements
 
     @Override
     public void setImage(Image image) {
-
+        this.image = image;
     }
 
     @Override
@@ -94,7 +95,7 @@ public class EnemyProjectile implements
 
     @Override
     public void down() {
-        this.position.setY(this.position.getY() - velocity);
+        this.position.setY(this.position.getY() + velocity);
     }
 
     @Override

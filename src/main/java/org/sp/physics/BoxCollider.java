@@ -1,5 +1,8 @@
 package org.sp.physics;
 
+import org.sp.entities.Enemy;
+import org.sp.entities.Player;
+import org.sp.factory.Projectile;
 import org.sp.logic.Damagable;
 import org.sp.rendering.Renderable;
 
@@ -11,6 +14,9 @@ public class BoxCollider implements Collider {
     private double height;
     private Vector2D position;
     Renderable entity;
+    Projectile projectile;
+    Player player;
+    Enemy enemy;
 
     public BoxCollider(double width, double height, Vector2D position, Renderable entity){
         this.height = height;
@@ -18,6 +24,12 @@ public class BoxCollider implements Collider {
         this.position = position;
         this.entity = entity;
     }
+    public void setProjectile(Projectile projectile){this.projectile = projectile;}
+    public void setPlayer(Player player){this.player = player;}
+    public void setEnemy(Enemy enemy){this.enemy = enemy;}
+
+    public Enemy getEnemy(){return this.enemy;}
+    public Projectile getProjectile(){return this.projectile;}
 
     @Override
     public double getWidth() {
