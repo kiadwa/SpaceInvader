@@ -61,6 +61,11 @@ public class PlayerProjectile
     }
 
     @Override
+    public Double getVelocity() {
+        return this.velocity;
+    }
+
+    @Override
     public BoxCollider getBoxCollider() {
         return this.boxCollider;
     }

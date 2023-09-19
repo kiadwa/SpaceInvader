@@ -10,7 +10,8 @@ public class BunkerRed implements BunkerState{
     public void changeColor(Bunker bunker) {
         Image image = new Image(new File("src/main/resources/bunker_red.png").toURI().toString(),
                         bunker.getWidth(),
-                        bunker.getHeight(), true, true);
+                        bunker.getHeight(), false, true);
         bunker.setImage(image);
+        bunker.setHealth(100);
     }
 }

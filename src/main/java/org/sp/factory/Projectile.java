@@ -17,6 +17,7 @@ public interface Projectile extends Renderable, Collider, Moveable, GameObject {
     public boolean hit();
     public void setImage(Image image);
     public void setVelocity(double velocity);
+    public Double getVelocity();
     public BoxCollider getBoxCollider();
     public void setBoxCollider(BoxCollider boxCollider);
 

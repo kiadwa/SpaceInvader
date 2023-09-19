@@ -29,6 +29,7 @@ public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, 
 
 
     public void setCurrentState(BunkerState state){this.currentState = state;}
+    public BunkerState getCurrentState(){return this.currentState;}
     public void changeColor(){currentState.changeColor(this);}
     public void setBoxCollider(BoxCollider boxCollider){this.boxCollider = boxCollider;}
     @Override
@@ -81,11 +82,6 @@ public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, 
 
     @Override
     public void update() {
-        if(health == 300);
-        if(health == 200);
-        if(health == 100);
-        if(health == 0);
-
     }
 }
 

@@ -2,6 +2,7 @@ package org.sp.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class EnemyGroup {
     private boolean moveLeft = true;
@@ -16,6 +17,9 @@ public class EnemyGroup {
     }
     public void setMoveDown(boolean bool){this.moveDown=bool;}
     public void setMoveLeft(boolean bool){this.moveLeft=bool;}
+
+
+
     public void moveEnemy(){
         for(Enemy enemy: enemyList){
             if(!moveLeft) {
@@ -43,6 +47,9 @@ public class EnemyGroup {
         }
     }
     public void enemyShoot(){
+        if(enemyList.isEmpty()) return;
 
     }
+
+
 }

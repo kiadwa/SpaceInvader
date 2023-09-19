@@ -11,6 +11,10 @@ import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
 import org.sp.rendering.Renderable;
+import org.sp.strategy.EnemyProjectileChange;
+import org.sp.strategy.EnemyProjectileStrategy;
+
+import java.io.File;
 
 public class Enemy
         implements
@@ -32,10 +36,17 @@ public class Enemy
 
     public Enemy() {
     }
+
     public EnemyProjectile shoot(){
         EnemyProjectileFactory enemyProjectileFactory = new EnemyProjectileFactory();
-        EnemyProjectile projectile = enemyProjectileFactory.createProjectile(new Vector2D(this.position.getX() - 8,
-                                                                                            this.position.getY()));
+        EnemyProjectile projectile = enemyProjectileFactory.createProjectile(new Vector2D(this.position.getX(),
+                                                                                            this.position.getY() + 2));
+
+        if(Fastprojectile){
+            projectile.fastPorjectileStrategy();
+        }else{
+            projectile.slowProjectileStrategy();
+        }
         return projectile;
     }
     public void setBoxCollider(BoxCollider boxCollider){this.boxCollider = boxCollider;}

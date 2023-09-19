@@ -8,6 +8,7 @@ import org.sp.physics.Collider;
 import org.sp.physics.Moveable;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Renderable;
+import org.sp.strategy.EnemyProjectileStrategy;
 
 import java.io.File;
 
@@ -16,18 +17,30 @@ public class EnemyProjectile implements
         Moveable,
         Renderable,
         GameObject {
-    private double velocity = 10;
-    private Vector2D position = new Vector2D(0,0);
-    private final double width = 5;
-    private final double height = 10;
+    private double velocity = 4;
+    private Vector2D position;
+    private final double width = 4;
+    private final double height = 7;
     private  Image image = null;
     BoxCollider boxCollider;
 
+    EnemyProjectileStrategy projectileStrategy;
+
     public EnemyProjectile(Vector2D v2D) {
         this.position = v2D;
-        this.image = new Image(new File("src/main/resources/projectile.png").toURI().toString(), width, height, true, true);
     }
-
+    public void setProjectileStrategy(EnemyProjectileStrategy projectileStrategy){
+        this.projectileStrategy = projectileStrategy;
+    }
+    public void slowProjectileStrategy(){
+        Image image =  new Image(new File("src/main/resources/purple_projectile.png").toURI().toString(), width, height, true, true);
+        projectileStrategy.changeProjectileSprite(this, image);
+    }
+    public void fastPorjectileStrategy(){
+        Image image =  new Image(new File("src/main/resources/blue_projectile.png").toURI().toString(), width, height, true, true);
+        projectileStrategy.changeProjectileSprite(this,image);
+        projectileStrategy.changeProjectileVelocity(this);
+    }
 
     @Override
     public void tick() {
@@ -57,6 +70,11 @@ public class EnemyProjectile implements
     @Override
     public void setVelocity(double velocity) {
         this.velocity = velocity;
+    }
+
+    @Override
+    public Double getVelocity() {
+        return this.velocity;
     }
 
     @Override

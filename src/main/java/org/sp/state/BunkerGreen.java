@@ -12,5 +12,6 @@ public class BunkerGreen implements BunkerState{
                 bunker.getWidth(),
                 bunker.getHeight(), false, true);
         bunker.setImage(image);
+        bunker.setHealth(300);
     }
 }

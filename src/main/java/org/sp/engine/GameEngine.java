@@ -21,6 +21,8 @@ import org.sp.physics.BoxCollider;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Renderable;
 import org.sp.state.BunkerGreen;
+import org.sp.state.BunkerRed;
+import org.sp.state.BunkerYellow;
 
 /**
  * This class manages the main loop and logic of the game
@@ -76,18 +78,28 @@ public class GameEngine implements ConfigReader {
 		for(List<Object> lobj: enemyData){
 			EnemyBuilder enemyBuilder = new EnemyBuilder();
 			Enemy enemy = enemyBuilder.createEnemy();
-			Vector2D v2D = new Vector2D(((Number)lobj.get(0)).doubleValue(),((Number) lobj.get(1)).doubleValue());
-			String projectileFast = new String((String) lobj.get(2));
-			enemyBuilder.setImage(new Image(new File("src/main/resources/enemy.png").toURI().toString(),
+			Image slow_shooter_alien_img = new Image(new File("src/main/resources/enemy_white.png").toURI().toString(),
 					enemy.getWidth(),
 					enemy.getHeight(),
-					true,
-					true,
-					false));
+					false,
+					true);
+			Image fast_shooter_alien_img = new Image(new File("src/main/resources/enemywhite2.png").toURI().toString(),
+					enemy.getWidth(),
+					enemy.getHeight(),
+					false,
+					true);
+			Vector2D v2D = new Vector2D(((Number)lobj.get(0)).doubleValue(),((Number) lobj.get(1)).doubleValue());
+			String projectileFast = new String((String) lobj.get(2));
 			enemyBuilder.setVector2D(v2D);
-            enemyBuilder.setProjectileType(projectileFast.equals("fast_straight"));
 			BoxCollider boxCollider = new BoxCollider(enemy.getWidth(),enemy.getHeight(),v2D,enemy);
 			enemyBuilder.setBoxCollider(boxCollider);
+			if(projectileFast.equals("fast_straight")){
+				enemyBuilder.setProjectileType(true);
+				enemyBuilder.setImage(fast_shooter_alien_img);
+			}else{
+				enemyBuilder.setProjectileType(false);
+				enemyBuilder.setImage(slow_shooter_alien_img);
+			}
 			renderables.add(enemy);
 			//gameobjects.add(enemy);
 			enemyGroup.addEnemy(enemy);
@@ -168,13 +180,34 @@ public class GameEngine implements ConfigReader {
 	}
 	public void checkBunkerHit(){
 		for(BoxCollider boxCollider: bunkersHitBox){
+			//Check if projectile hit any bunker
 			if(playerProjectileHitBox!= null && playerProjectileHitBox.isColliding(boxCollider)){
 				System.out.println("collided");
 				playerProjectileHitBox = null;
 				Projectile projectile = projectiles.remove(projectiles.size() - 1);
 				renderables.remove(projectile);
 				gameobjects.remove(projectile);
+				//Change state of bunker
+				Renderable renderableHit = boxCollider.getEntity();
+				Bunker bunkerHit = (Bunker) renderableHit;
+				//pass to bunkerStateRealtimeManagement to change bunker
+				bunkerStateRealtimeManagement(bunkerHit,boxCollider);
+
 			}
+		}
+	}
+	public void bunkerStateRealtimeManagement(Bunker bunkerHit,BoxCollider boxCollider){
+		if(bunkerHit.getCurrentState() instanceof BunkerGreen){
+			bunkerHit.setCurrentState(new BunkerYellow());
+			bunkerHit.changeColor();
+		}else if(bunkerHit.getCurrentState() instanceof BunkerYellow){
+			bunkerHit.setCurrentState(new BunkerRed());
+			bunkerHit.changeColor();
+		}else if(bunkerHit.getCurrentState() instanceof BunkerRed){
+			bunkerHit.setCurrentState(null);
+			renderables.remove(bunkerHit);
+			gameobjects.remove(bunkerHit);
+			bunkersHitBox.remove(boxCollider);
 		}
 	}
 	public List<Renderable> getRenderables(){
