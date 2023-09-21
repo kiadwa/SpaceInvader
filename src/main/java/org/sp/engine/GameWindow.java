@@ -29,7 +29,6 @@ public class GameWindow implements ConfigReader {
     private List<EntityView> entityViews;
     private Renderable background;
     private GraphicsContext gc;
-
     private double xViewportOffset = 0.0;
     private double yViewportOffset = 0.0;
     private static final double VIEWPORT_MARGIN = 280.0;
