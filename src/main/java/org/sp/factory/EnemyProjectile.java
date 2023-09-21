@@ -20,7 +20,7 @@ public class EnemyProjectile implements
     private double velocity = 3;
     private Vector2D position;
     private final double width = 5;
-    private final double height = 20;
+    private final double height = 15;
     private  Image image;
     BoxCollider boxCollider;
     private double damage = 0;

@@ -1,5 +1,6 @@
 package org.sp.physics;
 
+import org.sp.entities.Bunker;
 import org.sp.entities.Enemy;
 import org.sp.entities.Player;
 import org.sp.factory.Projectile;
@@ -17,6 +18,7 @@ public class BoxCollider implements Collider {
     Projectile projectile;
     Player player;
     Enemy enemy;
+    Bunker bunker;
 
     public BoxCollider(double width, double height, Vector2D position, Renderable entity){
         this.height = height;
@@ -25,8 +27,10 @@ public class BoxCollider implements Collider {
         this.entity = entity;
     }
     public void setProjectile(Projectile projectile){this.projectile = projectile;}
+    public void setBunker(Bunker bunker){this.bunker = bunker;}
     public void setPlayer(Player player){this.player = player;}
     public void setEnemy(Enemy enemy){this.enemy = enemy;}
+    public Bunker getBunker(){return this.bunker;}
 
     public Enemy getEnemy(){return this.enemy;}
     public Projectile getProjectile(){return this.projectile;}

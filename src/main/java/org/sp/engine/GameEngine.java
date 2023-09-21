@@ -32,7 +32,7 @@ public class GameEngine implements ConfigReader {
 	private BoxCollider playerHitBox;
 	private List<GameObject> gameobjects;
 	private List<Renderable> renderables;
-	private  List<EnemyProjectile> enemyProjectiles;
+	private  List<Projectile> enemyProjectiles;
 	private List<BoxCollider> enemyProjectileHitBox;
 	private Projectile playerProjectile;
 	private List<BoxCollider> enemyHitBox;
@@ -85,6 +85,7 @@ public class GameEngine implements ConfigReader {
 			//builder
 			bunkerBuilder.setVector2D(v2D);
 			BoxCollider boxCollider = new BoxCollider(hm.get("size")[0], hm.get("size")[1],v2D,bunker);
+			boxCollider.setBunker(bunker);
 			bunkerBuilder.setBoxCollider(boxCollider);
 			//add into GameEngine
 			renderables.add(bunker);
@@ -154,7 +155,7 @@ public class GameEngine implements ConfigReader {
 		}
 		//remove enemy projectile if reach end of screen. (799 is out of screen)
 		if(isEnemyProjectilesReachEnd()){
-			EnemyProjectile toDelete = getProjectileReachEnd();
+			Projectile toDelete = getProjectileReachEnd();
 			renderables.remove(toDelete);
 			gameobjects.remove(toDelete);
 			enemyProjectiles.remove(toDelete);
@@ -194,8 +195,7 @@ public class GameEngine implements ConfigReader {
 	}
 	public void removeAHeart(){
 		double currentLivesCount = player.getLives();
-		System.out.println(currentLivesCount);
-		System.out.println(PlayerLivesCount);
+
 		if(currentLivesCount != PlayerLivesCount){
 			for(Renderable renderable: renderables){
 				if(renderable instanceof HealthBar){
@@ -267,9 +267,7 @@ public class GameEngine implements ConfigReader {
 					gameobjects.remove(playerProjectile);
 					playerProjectile = null;
 				}
-				//Change state of bunker
-				Renderable renderableHit = boxCollider.getEntity();
-				Bunker bunkerHit = (Bunker) renderableHit;
+				Bunker bunkerHit = boxCollider.getBunker();
 				//pass to bunkerStateRealtimeManagement to change bunker
 				bunkerStateRealtimeManagement(bunkerHit,boxCollider);
 			}
@@ -283,10 +281,9 @@ public class GameEngine implements ConfigReader {
 					enemyProjectileHitBox.remove(boxColliderEnemyProjectile);
 					renderables.remove(boxColliderEnemyProjectile.getEntity());
 					gameobjects.remove(boxColliderEnemyProjectile.getProjectile());
-					enemyProjectiles.remove((EnemyProjectile) boxColliderEnemyProjectile.getProjectile());
+					enemyProjectiles.remove(boxColliderEnemyProjectile.getProjectile());
 					//Change state of bunker
-					Renderable renderableHit = boxCollider.getEntity();
-					Bunker bunkerHit = (Bunker) renderableHit;
+					Bunker bunkerHit = boxCollider.getBunker();
 					//pass to bunkerStateRealtimeManagement to change bunker
 					bunkerStateRealtimeManagement(bunkerHit, boxCollider);
 				}
@@ -299,7 +296,7 @@ public class GameEngine implements ConfigReader {
 				if(enemyBoxCollider.isColliding(bunkerBoxCollider)){
 					renderables.remove(bunkerBoxCollider.getEntity());
 					bunkersHitBox.remove(bunkerBoxCollider);
-					gameobjects.remove((Bunker)bunkerBoxCollider.getEntity());
+					gameobjects.remove(bunkerBoxCollider.getBunker());
 				}
 			}
 		}
@@ -379,10 +376,10 @@ public class GameEngine implements ConfigReader {
 		}
 		return false;
 	}
-	public EnemyProjectile getProjectileReachEnd(){
+	public Projectile getProjectileReachEnd(){
 		if(enemyProjectiles.isEmpty()) return null;
 		else{
-			for(EnemyProjectile projectile: enemyProjectiles){
+			for(Projectile projectile: enemyProjectiles){
 				if(projectile.getPosition().getY() >= 774) return projectile;
 			}
 		}

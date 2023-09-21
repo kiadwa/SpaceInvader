@@ -79,7 +79,6 @@ public class GameWindow implements ConfigReader {
         List<Renderable> renderables = model.getRenderables();
         for (Renderable entity : renderables) {
             boolean notFound = true;
-            boolean existInRenderables = true;
             for (EntityView view : entityViews) {
                 //if there are already entity view and exist renderable object, update its position.
                 if (view.matchesEntity(entity)) {
