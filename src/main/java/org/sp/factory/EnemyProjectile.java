@@ -151,5 +151,6 @@ public class EnemyProjectile implements
     @Override
     public void update() {
         down();
+        boxCollider.setPosition(this.position);
     }
 }

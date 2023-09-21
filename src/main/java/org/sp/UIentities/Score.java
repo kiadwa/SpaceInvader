@@ -6,7 +6,7 @@ import org.sp.rendering.Renderable;
 
 public class Score implements Renderable {
     private Integer Score = 0;
-    Vector2D position = new Vector2D(300,10);
+    Vector2D position = new Vector2D(300,40);
     public Integer getScore(){return this.Score;}
 
 

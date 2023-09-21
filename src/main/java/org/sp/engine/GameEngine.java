@@ -11,6 +11,7 @@ import org.sp.UIentities.HealthBar;
 import org.sp.UIentities.Score;
 import org.sp.builder.BunkerBuilder;
 import org.sp.builder.EnemyBuilder;
+import org.sp.builder.EnemyBuilderDirector;
 import org.sp.entities.Bunker;
 import org.sp.entities.Enemy;
 import org.sp.entities.EnemyGroup;
@@ -71,11 +72,14 @@ public class GameEngine implements ConfigReader {
 		List<HashMap<String, Double[]>> bunkerData = ConfigReader.readBunkersData(config);
 		// generate bunkers
 		for(HashMap<String, Double[]> hm: bunkerData){
+
 			BunkerBuilder bunkerBuilder = new BunkerBuilder();
 			Bunker bunker = bunkerBuilder.create();
 			Vector2D v2D = new Vector2D(hm.get("position")[0],hm.get("position")[1]);
 			Double width = hm.get("size")[0];
 			Double height = hm.get("size")[1];
+			Image image = new Image(new File("src/main/resources/bunker.png").toURI().toString(),width,height,false,true);
+			bunker.setImage(image);
 			//builder
 			bunkerBuilder.setHeight(height);
 			bunkerBuilder.setWidth(width);
@@ -94,36 +98,47 @@ public class GameEngine implements ConfigReader {
 		}
 	}
 	public void initializeEnemies(String config){
+		double width = 25;
+		double height = 30;
 		List<List<Object>> enemyData = ConfigReader.readEnemiesData(config);
 		List<Enemy> firstRowEnemy = new CopyOnWriteArrayList<>();
 		List<Enemy> secondRowEnemy = new CopyOnWriteArrayList<>();
 		for(List<Object> lobj: enemyData){
+			EnemyBuilderDirector enemyBuilderDirector;
+			Vector2D v2D = new Vector2D(((Number)lobj.get(0)).doubleValue(),((Number) lobj.get(1)).doubleValue());
+			String projectileFast = (String) lobj.get(2);
 			EnemyBuilder enemyBuilder = new EnemyBuilder();
-			Enemy enemy = enemyBuilder.createEnemy();
+			BoxCollider boxCollider = new BoxCollider(width,height,v2D,enemyBuilder.createEnemy());
 			Image slow_shooter_alien_img = new Image(new File("src/main/resources/enemy_white.png").toURI().toString(),
-					enemy.getWidth(),
-					enemy.getHeight(),
+					width,
+					height,
 					false,
 					true);
 			Image fast_shooter_alien_img = new Image(new File("src/main/resources/enemywhite2.png").toURI().toString(),
-					enemy.getWidth(),
-					enemy.getHeight(),
+					width,
+					height,
 					false,
 					true);
-			Vector2D v2D = new Vector2D(((Number)lobj.get(0)).doubleValue(),((Number) lobj.get(1)).doubleValue());
-			String projectileFast = (String) lobj.get(2);
-			enemyBuilder.setVector2D(v2D);
-			BoxCollider boxCollider = new BoxCollider(enemy.getWidth(),enemy.getHeight(),v2D,enemy);
-			boxCollider.setEnemy(enemy);
-			enemyBuilder.setBoxCollider(boxCollider);
 			if(projectileFast.equals("fast_straight")){
-				enemyBuilder.setProjectileType(true);
-				enemyBuilder.setImage(fast_shooter_alien_img);
+				enemyBuilderDirector = new EnemyBuilderDirector(enemyBuilder,
+						fast_shooter_alien_img,
+						v2D,
+						width,
+						height,
+						boxCollider,
+						true);
 
 			}else{
-				enemyBuilder.setProjectileType(false);
-				enemyBuilder.setImage(slow_shooter_alien_img);
+				enemyBuilderDirector = new EnemyBuilderDirector(enemyBuilder,
+						slow_shooter_alien_img,
+						v2D,
+						width,
+						height,
+						boxCollider,
+						false);
 			}
+			enemyBuilderDirector.constructEnemy();
+			Enemy enemy = enemyBuilderDirector.returnEnemy();
 			if(enemy.getPosition().getY() == 100) firstRowEnemy.add(enemy);
 			else secondRowEnemy.add(enemy);
 			renderables.add(enemy);

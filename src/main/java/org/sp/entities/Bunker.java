@@ -23,7 +23,7 @@ public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, 
     private double health = 300;
     private double width;
     private double height;
-    private  Image image = null;
+    private  Image image;
     private BoxCollider boxCollider;
     private BunkerState currentState;
 

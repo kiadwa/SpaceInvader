@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import org.sp.ConfigReader;
 import org.sp.entities.EntityViewImpl;
 import org.sp.entities.SpaceBackground;
@@ -63,6 +64,8 @@ public class GameWindow implements ConfigReader {
     }
     public void printScoreBoard(){
         gc.setFill(Paint.valueOf("WHITE"));
+        Font font = new Font("Ariel", 40);
+        gc.setFont(font);
         gc.fillText(model.getScore().getScore().toString(),
                 model.getScore().getPosition().getX(),
                 model.getScore().getPosition().getY(), 100);
