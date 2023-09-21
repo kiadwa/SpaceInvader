@@ -10,6 +10,7 @@ import org.sp.GameObject;
 import org.sp.UIentities.HealthBar;
 import org.sp.UIentities.Score;
 import org.sp.builder.BunkerBuilder;
+import org.sp.builder.BunkerBuilderDirector;
 import org.sp.builder.EnemyBuilder;
 import org.sp.builder.EnemyBuilderDirector;
 import org.sp.entities.Bunker;
@@ -23,6 +24,7 @@ import org.sp.physics.Vector2D;
 import org.sp.rendering.Renderable;
 import org.sp.state.BunkerGreen;
 import org.sp.state.BunkerRed;
+import org.sp.state.BunkerState;
 import org.sp.state.BunkerYellow;
 
 /**
@@ -72,25 +74,17 @@ public class GameEngine implements ConfigReader {
 		List<HashMap<String, Double[]>> bunkerData = ConfigReader.readBunkersData(config);
 		// generate bunkers
 		for(HashMap<String, Double[]> hm: bunkerData){
-
 			BunkerBuilder bunkerBuilder = new BunkerBuilder();
-			Bunker bunker = bunkerBuilder.create();
 			Vector2D v2D = new Vector2D(hm.get("position")[0],hm.get("position")[1]);
 			Double width = hm.get("size")[0];
 			Double height = hm.get("size")[1];
-			Image image = new Image(new File("src/main/resources/bunker.png").toURI().toString(),width,height,false,true);
-			bunker.setImage(image);
-			//builder
-			bunkerBuilder.setHeight(height);
-			bunkerBuilder.setWidth(width);
-			//state
-			bunker.setCurrentState(new BunkerGreen());
-			bunker.changeColor();
-			//builder
-			bunkerBuilder.setVector2D(v2D);
-			BoxCollider boxCollider = new BoxCollider(hm.get("size")[0], hm.get("size")[1],v2D,bunker);
+			BoxCollider boxCollider = new BoxCollider(hm.get("size")[0], hm.get("size")[1],v2D,bunkerBuilder.create());
+			Image image = new Image(new File("src/main/resources/bunker_green.png").toURI().toString(),width,height,false,true);
+			BunkerState initialState = new BunkerGreen();
+			BunkerBuilderDirector bunkerBuilderDirector = new BunkerBuilderDirector(bunkerBuilder,image,v2D,width,height,initialState,boxCollider);
+			bunkerBuilderDirector.constructBunker();
+			Bunker bunker = bunkerBuilderDirector.returnBunker();
 			boxCollider.setBunker(bunker);
-			bunkerBuilder.setBoxCollider(boxCollider);
 			//add into GameEngine
 			renderables.add(bunker);
 			gameobjects.add(bunker);
@@ -143,6 +137,7 @@ public class GameEngine implements ConfigReader {
 			else secondRowEnemy.add(enemy);
 			renderables.add(enemy);
 			enemyHitBox.add(boxCollider);
+			boxCollider.setEnemy(enemy);
 		}
 		enemyGroup.addEnemy(firstRowEnemy);
 		enemyGroup.addEnemy(secondRowEnemy);
@@ -242,7 +237,6 @@ public class GameEngine implements ConfigReader {
 		}
 	}
 	public boolean checkEnemyHit(){
-
 		for(BoxCollider boxCollider: enemyHitBox){
 			if(playerProjectileHitBox!= null && playerProjectileHitBox.isColliding(boxCollider)){
 					enemyGroup.removeEnemy(boxCollider.getEnemy());

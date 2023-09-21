@@ -56,7 +56,7 @@ public class Enemy
     public void takeDamage(double amount) {
         this.health -= amount;
     }
-    public void increaseMovementSPD(){this.movementSPD += 0.1;}
+    public void increaseMovementSPD(){this.movementSPD += 0.07;}
 
     public void setFastprojectile(boolean bool){this.Fastprojectile = bool;}
     @Override

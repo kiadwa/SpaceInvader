@@ -41,7 +41,9 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader, Ga
                     height,
                     false, true);
 
+        if(this.color.equalsIgnoreCase("green") ){
 
+        }
 
     }
     public void setPlayerData(){
@@ -59,7 +61,7 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader, Ga
     @Override
     public void takeDamage(double amount) {
         this.health -= amount;
-        if(this.health == 0 && this.lives > 0){
+        if(this.health <= 0 && this.lives > 0){
             this.lives -= 1;
             this.health = 100;
         }
@@ -73,7 +75,7 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader, Ga
 
     @Override
     public boolean isAlive() {
-        return this.health > 0 || this.lives > 0;
+        return this.lives > 0;
     }
 
     @Override

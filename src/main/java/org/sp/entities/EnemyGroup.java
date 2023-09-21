@@ -93,10 +93,8 @@ public class EnemyGroup {
         if (getRealTimeCount() != this.enemyCount) {
             for (List<Enemy> enemylist : enemyList) {
                 for (Enemy enemy : enemylist) {
-                    System.out.println("increased speed");
                     enemy.increaseMovementSPD();
                 }
-
             }
             this.enemyCount = getRealTimeCount();
         }

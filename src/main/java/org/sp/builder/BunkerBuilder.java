@@ -6,6 +6,7 @@ import org.sp.entities.Bunker;
 import org.sp.physics.BoxCollider;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
+import org.sp.state.BunkerState;
 
 public class BunkerBuilder implements ObjectBuilder{
     private Bunker product = new Bunker();
@@ -46,6 +47,7 @@ public class BunkerBuilder implements ObjectBuilder{
     public void setProjectileType(boolean bool) {
         return;
     }
+    public void setState(BunkerState state){this.product.setCurrentState(state);}
 
     @Override
     public void setBoxCollider(BoxCollider boxCollider) {
