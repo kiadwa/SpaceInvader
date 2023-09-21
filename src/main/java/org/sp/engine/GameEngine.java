@@ -62,6 +62,7 @@ public class GameEngine implements ConfigReader {
 		PlayerLivesCount = player.getLives();
 		renderables.add(player);
 		playerHitBox = player.getBoxCollider();
+		player.setPlayerImage();
 		double healthBarRootX = 550;
 		for(int i = 0; i < player.getLives(); i++){
 			renderables.add(new HealthBar(new Vector2D(healthBarRootX,5)));

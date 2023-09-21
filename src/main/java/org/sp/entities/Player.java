@@ -34,17 +34,26 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader, Ga
 
     public Player(){
         setPlayerData();
+        setPlayerImage();
 
-
-        this.image = new Image(new File("src/main/resources/player.png").toURI().toString(),
+    }
+    public void setPlayerImage(){
+        if(this.color.equalsIgnoreCase("green") ){
+            this.image = new Image(new File("src/main/resources/player.png").toURI().toString(),
                     width,
                     height,
                     false, true);
-
-        if(this.color.equalsIgnoreCase("green") ){
-
+        }else if(this.color.equalsIgnoreCase("white")){
+            this.image = new Image(new File("src/main/resources/player1.png").toURI().toString(),
+                    width,
+                    height,
+                    false, true);
+        }else if(this.color.equalsIgnoreCase("blue")){
+            this.image = new Image(new File("src/main/resources/player2.png").toURI().toString(),
+                    width,
+                    height,
+                    false, true);
         }
-
     }
     public void setPlayerData(){
         HashMap<String, Object> playerData;
