@@ -17,28 +17,30 @@ public class EnemyProjectile implements
         Moveable,
         Renderable,
         GameObject {
-    private double velocity = 1;
+    private double velocity = 3;
     private Vector2D position;
-    private final double width = 4;
-    private final double height = 7;
+    private final double width = 5;
+    private final double height = 20;
     private  Image image;
     BoxCollider boxCollider;
+    private double damage = 0;
 
     EnemyProjectileStrategy projectileStrategy;
 
-    public EnemyProjectile(Vector2D v2D) {
+    public EnemyProjectile(Vector2D v2D, double damage) {
         this.position = v2D;
         this.boxCollider = new BoxCollider(width,height,position,this);
+        this.damage = damage;
     }
     public void setProjectileStrategy(EnemyProjectileStrategy projectileStrategy){
         this.projectileStrategy = projectileStrategy;
     }
     public void slowProjectileStrategy(){
-        Image image =  new Image(new File("src/main/resources/purple_projectile.png").toURI().toString(), width, height, true, true);
+        Image image =  new Image(new File("src/main/resources/purple_projectile.png").toURI().toString(), width, height, false, true);
         projectileStrategy.changeProjectileSprite(this, image);
     }
     public void fastProjectileStrategy(){
-        Image image =  new Image(new File("src/main/resources/blue_projectile.png").toURI().toString(), width, height, true, true);
+        Image image =  new Image(new File("src/main/resources/blue_projectile.png").toURI().toString(), width, height, false, true);
         projectileStrategy.changeProjectileSprite(this,image);
         projectileStrategy.changeProjectileVelocity(this);
     }
@@ -49,8 +51,16 @@ public class EnemyProjectile implements
     }
 
     @Override
+    public void setDamage(double damage) {
+        this.damage = damage;
+    }
+
+    @Override
     public double getDamage() {
         return damage;
+    }
+    public static double getClassDamage(){
+        return 100;
     }
 
     @Override

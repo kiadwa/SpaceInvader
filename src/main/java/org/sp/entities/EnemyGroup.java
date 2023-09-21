@@ -34,21 +34,49 @@ public class EnemyGroup {
     }
     public void updateMoveScheme(){
         //todo make enemy move faster after each take down.
-        if(enemyList.get(0).isEmpty() && enemyList.get(1).isEmpty()) return;
-        if(enemyList.get(0).get(0).getPosition().getX() <= 1
-                || enemyList.get(1).get(0).getPosition().getX() <= 1) {
-            this.moveLeft = false;
-            for(List<Enemy> enemylist: enemyList){
-                for(Enemy enemy: enemylist)
-                    enemy.down();
+        if(enemyList.get(0).isEmpty()){
+            if (enemyList.get(1).get(0).getPosition().getX() <= 1) {
+                this.moveLeft = false;
+                for (List<Enemy> enemylist : enemyList) {
+                    for (Enemy enemy : enemylist)
+                        enemy.down();
+                }
+            } else if (enemyList.get(1).get(enemyList.get(1).size() - 1).getPosition().getX() >= 574) {
+                this.moveLeft = true;
+                for (List<Enemy> enemylist : enemyList) {
+                    for (Enemy enemy : enemylist)
+                        enemy.down();
+                }
             }
-        }
-        else if(enemyList.get(0).get(enemyList.get(0).size()-1).getPosition().getX() >= 574
-                ||enemyList.get(1).get(enemyList.get(1).size()-1).getPosition().getX() >= 574) {
-            this.moveLeft= true;
-            for(List<Enemy> enemylist: enemyList){
-                for(Enemy enemy: enemylist)
-                    enemy.down();
+        }else if(enemyList.get(1).isEmpty()){
+            if (enemyList.get(0).get(0).getPosition().getX() <= 1) {
+                this.moveLeft = false;
+                for (List<Enemy> enemylist : enemyList) {
+                    for (Enemy enemy : enemylist)
+                        enemy.down();
+                }
+            } else if (enemyList.get(0).get(enemyList.get(0).size() - 1).getPosition().getX() >= 574) {
+                this.moveLeft = true;
+                for (List<Enemy> enemylist : enemyList) {
+                    for (Enemy enemy : enemylist)
+                        enemy.down();
+                }
+            }
+        }else {
+            if (enemyList.get(0).get(0).getPosition().getX() <= 1
+                    || enemyList.get(1).get(0).getPosition().getX() <= 1) {
+                this.moveLeft = false;
+                for (List<Enemy> enemylist : enemyList) {
+                    for (Enemy enemy : enemylist)
+                        enemy.down();
+                }
+            } else if (enemyList.get(0).get(enemyList.get(0).size() - 1).getPosition().getX() >= 574
+                    || enemyList.get(1).get(enemyList.get(1).size() - 1).getPosition().getX() >= 574) {
+                this.moveLeft = true;
+                for (List<Enemy> enemylist : enemyList) {
+                    for (Enemy enemy : enemylist)
+                        enemy.down();
+                }
             }
         }
         if(getRealTimeCount() != this.enemyCount){
@@ -59,7 +87,6 @@ public class EnemyGroup {
             this.enemyCount = getRealTimeCount();
         }
     }
-
 
 
 }

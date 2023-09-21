@@ -155,8 +155,8 @@ public interface ConfigReader {
             Object playerY = ((JSONObject)(jsonPlayer.get("position"))).get("y");
             Object speed = jsonPlayer.get("speed");
             Object lives = jsonPlayer.get("lives");
-
-
+            Object colour = jsonPlayer.get("colour");
+            result.put("colour", colour);
             result.put("x",  playerX);
             result.put("y", playerY);
             result.put("speed", speed);

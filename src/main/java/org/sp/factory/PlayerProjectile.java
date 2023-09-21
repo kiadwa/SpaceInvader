@@ -17,22 +17,29 @@ public class PlayerProjectile
         Moveable,
         Renderable,
         GameObject {
-    private double velocity = 4;
+    private double velocity = 3;
     private Vector2D position = null;
-    private final double width = 4;
-    private final double height = 7;
+    private final double width = 5;
+    private final double height = 15;
     private BoxCollider boxCollider;
+    private double damage = 0;
     private  Image image = new Image(new File("src/main/resources/projectile.png").toURI().toString(), width, height, false, true);
 
-    public PlayerProjectile(Vector2D v2D) {
+    public PlayerProjectile(Vector2D v2D, double damage) {
         this.position= v2D;
         this.boxCollider = new BoxCollider(width,height,v2D,this);
         this.boxCollider.setPosition(v2D);
+        this.damage = 100;
     }
 
     @Override
     public void tick() {
 
+    }
+
+    @Override
+    public void setDamage(double damage) {
+        this.damage = damage;
     }
 
     @Override

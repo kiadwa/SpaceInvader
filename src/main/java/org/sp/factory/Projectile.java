@@ -10,8 +10,10 @@ import org.sp.rendering.Renderable;
 
 public interface Projectile extends Renderable, Collider, Moveable, GameObject {
 
-    final double damage = 100;
+    double damage = 100;
+
     public void tick();
+    public void setDamage(double damage);
     public double getDamage();
     public void setPosition(Vector2D vector2D);
     public boolean hit();

@@ -7,6 +7,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.image.Image;
 import org.sp.ConfigReader;
 import org.sp.GameObject;
+import org.sp.UIentities.HealthBar;
+import org.sp.UIentities.Score;
 import org.sp.builder.BunkerBuilder;
 import org.sp.builder.EnemyBuilder;
 import org.sp.entities.Bunker;
@@ -37,12 +39,14 @@ public class GameEngine implements ConfigReader {
 	private List<BoxCollider> bunkersHitBox;
 	private EnemyGroup enemyGroup = new EnemyGroup();
 	private Player player;
-
+	private double PlayerLivesCount;
+	private Score gameScore = new Score();
 	private boolean left;
 	private boolean right;
 
 
 	public GameEngine(String config){
+
 		gameobjects = new ArrayList<GameObject>();
 		renderables = new ArrayList<Renderable>();
 		enemyProjectiles = new CopyOnWriteArrayList<>();
@@ -52,10 +56,17 @@ public class GameEngine implements ConfigReader {
 		initializeBunkers(config);
 		initializeEnemies(config);
 		player = new Player();
+		PlayerLivesCount = player.getLives();
 		renderables.add(player);
 		playerHitBox = player.getBoxCollider();
+		double healthBarRootX = 550;
+		for(int i = 0; i < player.getLives(); i++){
+			renderables.add(new HealthBar(new Vector2D(healthBarRootX,5)));
+			healthBarRootX -= 50;
+		}
 
 	}
+
 	public void initializeBunkers(String config){
 		List<HashMap<String, Double[]>> bunkerData = ConfigReader.readBunkersData(config);
 		// generate bunkers
@@ -115,8 +126,6 @@ public class GameEngine implements ConfigReader {
 			if(enemy.getPosition().getY() == 100) firstRowEnemy.add(enemy);
 			else secondRowEnemy.add(enemy);
 			renderables.add(enemy);
-			//gameobjects.add(enemy);
-
 			enemyHitBox.add(boxCollider);
 		}
 		enemyGroup.addEnemy(firstRowEnemy);
@@ -151,10 +160,6 @@ public class GameEngine implements ConfigReader {
 			enemyProjectiles.remove(toDelete);
 			enemyProjectileHitBox.remove(toDelete.getBoxCollider());
 		}
-		//System.out.println(projectiles.size());
-		//System.out.println(renderables.size());
-		//System.out.println(gameobjects.size());
-
 
 		// ensure that renderable foreground objects don't go off-screen
 		for(Renderable ro: renderables){
@@ -177,14 +182,51 @@ public class GameEngine implements ConfigReader {
 				ro.getPosition().setY(1);
 			}
 		}
-		//ensure to detect any collision by Player projectile that happens
+		//ensure to detect and process any collision that happens
 		checkBunkerHitByPlayerProjectile();
-		checkEnemyHit();
+		if(checkEnemyHit() || checkPlayerProjectileHitEnemyProjectile()) gameScore.incrementScore();
 		checkBunkerHitByEnemyProjectile();
+		BunkerHitByEnemy();
+		checkPlayerHit();
+		removeAHeart();
+
 
 	}
-	int cnt = 0;
-	public void checkEnemyHit(){
+	public void removeAHeart(){
+		double currentLivesCount = player.getLives();
+		System.out.println(currentLivesCount);
+		System.out.println(PlayerLivesCount);
+		if(currentLivesCount != PlayerLivesCount){
+			for(Renderable renderable: renderables){
+				if(renderable instanceof HealthBar){
+					renderables.remove(renderable);
+					break;
+				}
+			}
+			PlayerLivesCount = currentLivesCount;
+		}
+	}
+	public boolean checkIfGameEnd(){
+
+		if(!player.isAlive()) return true;
+		List<List<Enemy>> enemyLists = enemyGroup.getEnemyList();
+		for(List<Enemy> enemyList: enemyLists){
+			for(Enemy enemy: enemyList){
+				if(enemy.getPosition().getY() >= player.getPosition().getY()) return true;
+			}
+		}
+        return enemyLists.get(0).isEmpty() && enemyLists.get(1).isEmpty();
+    }
+	public void checkPlayerHit(){
+		for(BoxCollider boxCollider: enemyProjectileHitBox){
+			if(boxCollider != null && boxCollider.isColliding(playerHitBox)){
+				player.takeDamage(boxCollider.getProjectile().getDamage());
+				renderables.remove(boxCollider.getEntity());
+				enemyProjectileHitBox.remove(boxCollider);
+			}
+		}
+	}
+	public boolean checkEnemyHit(){
 
 		for(BoxCollider boxCollider: enemyHitBox){
 			if(playerProjectileHitBox!= null && playerProjectileHitBox.isColliding(boxCollider)){
@@ -195,8 +237,25 @@ public class GameEngine implements ConfigReader {
 					gameobjects.remove(playerProjectile);
 					playerProjectile = null;
 					playerProjectileHitBox = null;
+					return true;
 			}
 		}
+		return false;
+	}
+	public boolean checkPlayerProjectileHitEnemyProjectile(){
+		for(BoxCollider boxCollider: enemyProjectileHitBox){
+			if(playerProjectileHitBox != null && playerProjectileHitBox.isColliding(boxCollider)){
+				renderables.remove(playerProjectile);
+				renderables.remove(boxCollider.getProjectile());
+				gameobjects.remove(playerProjectile);
+				playerProjectile = null;
+				playerProjectileHitBox = null;
+				enemyProjectileHitBox.remove(boxCollider);
+				return true;
+
+			}
+		}
+		return false;
 	}
 	public void checkBunkerHitByPlayerProjectile(){
 		for(BoxCollider boxCollider: bunkersHitBox){
@@ -230,6 +289,17 @@ public class GameEngine implements ConfigReader {
 					Bunker bunkerHit = (Bunker) renderableHit;
 					//pass to bunkerStateRealtimeManagement to change bunker
 					bunkerStateRealtimeManagement(bunkerHit, boxCollider);
+				}
+			}
+		}
+	}
+	public void BunkerHitByEnemy(){
+		for(BoxCollider bunkerBoxCollider: bunkersHitBox){
+			for(BoxCollider enemyBoxCollider: enemyHitBox){
+				if(enemyBoxCollider.isColliding(bunkerBoxCollider)){
+					renderables.remove(bunkerBoxCollider.getEntity());
+					bunkersHitBox.remove(bunkerBoxCollider);
+					gameobjects.remove((Bunker)bunkerBoxCollider.getEntity());
 				}
 			}
 		}
@@ -282,6 +352,7 @@ public class GameEngine implements ConfigReader {
 			return true;
 		}
 	}
+	public Score getScore(){return this.gameScore;}
 
 
 	private void movePlayer(){
@@ -333,8 +404,9 @@ public class GameEngine implements ConfigReader {
 		Enemy chosenOne;
 		Random rand = new Random();
 		if(enemyGroup.getRealTimeCount() == 0) return null;
-		int randomRowIndex = rand.nextInt(enemyGroup.getEnemyList().size());
-		int randomColIndex = rand.nextInt(enemyGroup.getEnemyList().get(randomRowIndex).size());
+		int randomRowIndex = rand.nextInt(0,enemyGroup.getEnemyList().size());
+		if(enemyGroup.getEnemyList().get(randomRowIndex).isEmpty()){return null;}
+		int randomColIndex = rand.nextInt(0,enemyGroup.getEnemyList().get(randomRowIndex).size());
 		chosenOne = enemyGroup.getEnemyList().get(randomRowIndex).get(randomColIndex);
 		return chosenOne;
 	}

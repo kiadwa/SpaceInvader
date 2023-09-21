@@ -31,7 +31,7 @@ public class Enemy
     private double height = 30;
     private Image image;
     private boolean Fastprojectile = false;
-    private double movementSPD = 0.5;
+    private double movementSPD = 0.3;
     private BoxCollider boxCollider;
 
     public Enemy() {
@@ -39,8 +39,8 @@ public class Enemy
 
     public EnemyProjectile shoot(){
         EnemyProjectileFactory enemyProjectileFactory = new EnemyProjectileFactory();
-        EnemyProjectile projectile = enemyProjectileFactory.createProjectile(new Vector2D(this.position.getX(),
-                                                                                            this.position.getY() + 2));
+        EnemyProjectile projectile = enemyProjectileFactory.createProjectile(new Vector2D(this.position.getX() + 3 ,
+                this.position.getY() + 2), 100);
         projectile.setProjectileStrategy(new EnemyProjectileChange());
         if(Fastprojectile){
 

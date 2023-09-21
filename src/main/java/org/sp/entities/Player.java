@@ -25,18 +25,23 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader, Ga
     private double health = 100;
     private final double width = 25;
     private final double height = 30;
-    private final Image image;
+    private  Image image;
     private int lives = 0;
     private String color;
     private BoxCollider boxCollider;
+    private Double speed;
 
 
     public Player(){
-        this.image = new Image(new File("src/main/resources/player.png").toURI().toString(),
-                width,
-                height,
-                true, true);
         setPlayerData();
+
+        if(this.color.equalsIgnoreCase("green")) {
+            this.image = new Image(new File("src/main/resources/player.png").toURI().toString(),
+                    width,
+                    height,
+                    true, true);
+        }
+
 
     }
     public void setPlayerData(){
@@ -45,22 +50,23 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader, Ga
         this.position.setX(((Number)playerData.get("x")).doubleValue());
         this.position.setY(((Number) playerData.get("y")).doubleValue());
         this.lives = ((Number)playerData.get("lives")).intValue();
-        this.color = (String) playerData.get("color");
-        System.out.println(this.getPosition().getX());
-        System.out.println(this.getPosition().getY());
+        this.color = (String) playerData.get("colour");
+        this.speed = ((Number)playerData.get("speed")).doubleValue();
         this.boxCollider = new BoxCollider(width,height,position, this);
     }
-
+    public int getLives(){return this.lives;}
 
     @Override
     public void takeDamage(double amount) {
         this.health -= amount;
+        if(this.health == 0 && this.lives > 0){
+            this.lives -= 1;
+            this.health = 100;
+        }
     }
 
     @Override
     public double getHealth() {
-        if(lives > 0 && health == 0)
-            return 100;
         return health;
     }
     public BoxCollider getBoxCollider(){return this.boxCollider;}
@@ -82,19 +88,19 @@ public class Player implements Moveable, Damagable, Renderable, ConfigReader, Ga
 
     @Override
     public void left() {
-        this.position.setX(this.position.getX() - 1);
+        this.position.setX(this.position.getX() - speed);
     }
 
     @Override
     public void right() {
-        this.position.setX(this.position.getX() + 1);
+        this.position.setX(this.position.getX() + speed);
     }
 
     public PlayerProjectile shoot(){
         // todo
         PlayerProjectileFactory playerProjectileFactory = new PlayerProjectileFactory();
         PlayerProjectile projectile = playerProjectileFactory.createProjectile(new Vector2D(this.position.getX() + 3 ,
-                this.position.getY() + 2));
+                this.position.getY() + 2), 100);
         return projectile;
     }
 

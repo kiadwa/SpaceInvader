@@ -3,6 +3,9 @@ package org.sp.engine;
 import java.util.List;
 import java.util.ArrayList;
 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Paint;
 import org.sp.ConfigReader;
 import org.sp.entities.EntityViewImpl;
 import org.sp.entities.SpaceBackground;
@@ -15,6 +18,8 @@ import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
+import static javafx.scene.canvas.GraphicsContext.*;
+
 public class GameWindow implements ConfigReader {
 	private final int width;
     private final int height;
@@ -23,6 +28,7 @@ public class GameWindow implements ConfigReader {
     private GameEngine model;
     private List<EntityView> entityViews;
     private Renderable background;
+    private GraphicsContext gc;
 
     private double xViewportOffset = 0.0;
     private double yViewportOffset = 0.0;
@@ -43,20 +49,33 @@ public class GameWindow implements ConfigReader {
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
 
         entityViews = new ArrayList<EntityView>();
-
+        Canvas canvas = new Canvas(width, height);
+        gc = canvas.getGraphicsContext2D();
+        pane.getChildren().add(canvas);
 
     }
 
 	public void run() {
-         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(17), t -> this.draw()));
 
+         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(17), t -> this.draw()));
          timeline.setCycleCount(Timeline.INDEFINITE);
          timeline.play();
+
+    }
+    public void printScoreBoard(){
+        gc.setFill(Paint.valueOf("WHITE"));
+        gc.fillText(model.getScore().getScore().toString(),
+                model.getScore().getPosition().getX(),
+                model.getScore().getPosition().getY(), 100);
     }
 
     private void draw(){
-        model.update();
+        gc.clearRect(0, 0, width, height);
+        printScoreBoard();
 
+        if(model.checkIfGameEnd()) return;
+
+        model.update();
         List<Renderable> renderables = model.getRenderables();
         for (Renderable entity : renderables) {
             boolean notFound = true;
@@ -87,7 +106,9 @@ public class GameWindow implements ConfigReader {
                 pane.getChildren().remove(entityView.getNode());
             }
         }
+
         entityViews.removeIf(EntityView::isMarkedForDelete);
+
     }
 
 	public Scene getScene() {
