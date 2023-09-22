@@ -12,11 +12,8 @@ public interface Projectile extends Renderable, Collider, Moveable, GameObject {
 
     double damage = 100;
 
-    public void tick();
-    public void setDamage(double damage);
     public double getDamage();
     public void setPosition(Vector2D vector2D);
-    public boolean hit();
     public void setImage(Image image);
     public void setVelocity(double velocity);
     public Double getVelocity();

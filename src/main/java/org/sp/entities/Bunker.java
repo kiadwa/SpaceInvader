@@ -17,7 +17,7 @@ import org.sp.state.BunkerState;
 
 import java.awt.*;
 
-public class Bunker implements Damagable, Renderable, ConfigReader, GameObject, Collider {
+public class Bunker implements Damagable, Renderable, GameObject {
     private Vector2D position = new Vector2D(0,0);
     private final Animator anim = null;
     private double health = 300;

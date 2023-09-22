@@ -7,7 +7,7 @@ import org.sp.physics.BoxCollider;
 import org.sp.physics.Vector2D;
 import org.sp.rendering.Animator;
 
-public class EnemyBuilder implements ObjectBuilder, ConfigReader {
+public class EnemyBuilder implements ObjectBuilder {
     Enemy product = new Enemy();
     public Enemy createEnemy(){
         return this.product;

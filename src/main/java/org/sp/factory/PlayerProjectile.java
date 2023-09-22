@@ -32,15 +32,9 @@ public class PlayerProjectile
         this.damage = 100;
     }
 
-    @Override
-    public void tick() {
 
-    }
 
-    @Override
-    public void setDamage(double damage) {
-        this.damage = damage;
-    }
+
 
     @Override
     public double getDamage() {
@@ -50,11 +44,6 @@ public class PlayerProjectile
     @Override
     public void setPosition(Vector2D vector2D) {
 
-    }
-
-    @Override
-    public boolean hit() {
-        return false;
     }
 
     @Override
